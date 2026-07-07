@@ -1,0 +1,24 @@
+-- Module: G1_MANAGERLOGINPAGE
+-- Source: G1_MANAGERLOGINPAGE_fmb.xml
+-- Purpose: Manager authentication before entering approval workflow
+--
+-- !!  SECURITY ISSUE — DO NOT IMPLEMENT AS-IS  !!
+-- The original form hardcodes credentials directly in a trigger:
+--   IF :USERNAME = 'MANAGER' AND :PASSWORD = 'ADMIN123' THEN
+--     CALL_FORM('...G1_MANAGERAPPROVAL.fmx')
+--   ELSE
+--     FND_MESSAGE.SET_STRING('INVALID CREDENTIALS')
+--   END IF
+--
+-- There is no database lookup. The password 'ADMIN123' is plaintext in the form binary.
+-- This is a critical finding for the modernization report.
+--
+-- NO PACKAGE GENERATED — extracting this logic as a PL/SQL package would
+-- just move the hardcoded credential into the database, which is not better.
+--
+-- APEX replacement:
+--   Use APEX built-in authentication. Create a dedicated MANAGER role/account
+--   in the APEX workspace or Oracle Database users, protected by Oracle's
+--   standard credential management. Apply page-level authorization scheme
+--   (e.g., "User Is In Group: MANAGER") to the approval page.
+--   Do NOT replicate the hardcoded credential pattern.

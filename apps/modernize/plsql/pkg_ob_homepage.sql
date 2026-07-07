@@ -1,0 +1,13 @@
+-- Module: G1_HOMEPAGE
+-- Source: G1_HOMEPAGE_fmb.xml
+-- Purpose: Top-level navigation — two buttons (CUSTOMER, MANAGER)
+--
+-- NO PACKAGE GENERATED — this module contains zero business logic.
+-- It has two WHEN-BUTTON-PRESSED triggers that each call CALL_FORM to navigate
+-- to G1_CUSTOMERHOMEPAGE or G1_MANAGERLOGINPAGE respectively.
+--
+-- APEX equivalent:
+--   A static APEX page with two buttons linked to their target pages via
+--   "Redirect to Page" branch actions. No PL/SQL required.
+--
+-- No database interaction. No validation. No state.

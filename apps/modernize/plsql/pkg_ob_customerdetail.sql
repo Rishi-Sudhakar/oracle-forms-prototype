@@ -1,0 +1,23 @@
+-- Module: G1_CUSTOMERDETAIL
+-- Source: G1_CUSTOMERDETAIL_fmb.xml
+-- Purpose: Read-only detail view of an account request, launched from G1_MANAGERAPPROVAL
+--
+-- Thin module — a database block populating all fields from GROUP1_ACCOUNTREQUEST
+-- using a RequestId passed via parameter P5. BACK button returns to MANAGERAPPROVAL
+-- passing P1=RequestId via CALL_FORM paramlist.
+--
+-- No business logic, no DML, no calculations.
+--
+-- NO DEDICATED PACKAGE GENERATED — the data retrieval is a single SELECT.
+-- If a package is needed for the APEX build (e.g., for REST Data Source or
+-- page process), use this inline query directly:
+--
+--   SELECT RequestId, Branch, AccountType, Title, FirstName, LastName,
+--          DOB, WorkPhone, HomePhone, Address, State, Zip, Email, Status
+--     FROM GROUP1_ACCOUNTREQUEST
+--    WHERE RequestId = :P5_REQUEST_ID;
+--
+-- APEX equivalent:
+--   A read-only APEX form or Classic Report page sourced from GROUP1_ACCOUNTREQUEST
+--   filtered by a page item P5_REQUEST_ID set when navigating from the approval page.
+--   Navigation back: standard APEX Cancel/Back button redirecting to the approval page.

@@ -1,0 +1,17 @@
+-- Module: G1_CUSTOMERHOMEPAGE
+-- Source: G1_CUSTOMERHOMEPAGE_fmb.xml
+-- Purpose: Customer navigation hub — 5 buttons routing to sub-forms
+--
+-- NO PACKAGE GENERATED — pure navigation, no business logic.
+-- Five WHEN-BUTTON-PRESSED triggers calling CALL_FORM or equivalent:
+--   NEW ACCOUNT       → G1_ACCOUNTOPENING.fmx
+--   CHECK STATUS      → G1_CHECKSTATUS1.fmx
+--   ONLINE REGISTRATION → G1_ONLINEREGISTRATION.fmx
+--   LOGIN             → G1_LOGIN.fmx
+--   INTEREST CALCULATOR → G1_SIMPLEINTEREST.fmx
+--
+-- APEX equivalent:
+--   An APEX page with 5 buttons, each with a "Redirect to Page" branch.
+--   No PL/SQL required.
+--
+-- No database interaction. No validation. No state.
