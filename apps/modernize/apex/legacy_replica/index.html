@@ -1,0 +1,811 @@
+<title>Oracle Forms Legacy Replica — online_banking</title>
+<meta name="description" content="Faithful Oracle Forms UI recreation in HTML/CSS — online_banking module: Account Opening, Manager Approval, Check Status.">
+
+<style>
+/* Oracle Forms Runtime Environment — faithful Win98/2000 era replica */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  background: #008080; /* classic Windows 98 teal desktop */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 12px;
+  gap: 0;
+}
+
+/* DEMO LABEL */
+.demo-label {
+  width: 100%;
+  max-width: 780px;
+  background: #f5e642;
+  border: 2px solid #000;
+  padding: 6px 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  color: #000;
+}
+
+/* ORACLE FORMS WINDOW */
+.forms-window {
+  width: 100%;
+  max-width: 780px;
+  border: 2px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  box-shadow: 2px 2px 0 #000;
+  background: #d4d0c8;
+}
+
+/* TITLE BAR */
+.title-bar {
+  background: linear-gradient(to right, #000082, #1084d0);
+  color: white;
+  padding: 3px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+.title-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.title-icon {
+  width: 15px;
+  height: 15px;
+  background: #ff8;
+  border: 1px solid #c40;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c40;
+  font-weight: 900;
+}
+.title-bar-btns {
+  display: flex;
+  gap: 2px;
+}
+.title-btn {
+  width: 16px;
+  height: 14px;
+  background: #d4d0c8;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #000;
+  font-family: Tahoma, Arial, sans-serif;
+  font-weight: 700;
+}
+
+/* MENU BAR */
+.menu-bar {
+  background: #d4d0c8;
+  border-bottom: 1px solid #808080;
+  padding: 2px 4px;
+  display: flex;
+  gap: 0;
+}
+.menu-item {
+  padding: 1px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.menu-item:hover, .menu-item.active { background: #000080; color: white; }
+.menu-item span { text-decoration: underline; }
+
+/* TOOLBAR */
+.toolbar {
+  background: #d4d0c8;
+  border-bottom: 1px solid #808080;
+  padding: 2px 4px;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+.tb-btn {
+  width: 22px;
+  height: 22px;
+  background: #d4d0c8;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+}
+.tb-btn:active { border-color: #808080 #fff #fff #808080; }
+.tb-sep { width: 1px; height: 20px; background: #808080; margin: 0 3px; }
+
+/* FORM TABS */
+.form-tabs {
+  background: #d4d0c8;
+  border-bottom: 2px solid #808080;
+  padding: 4px 4px 0;
+  display: flex;
+  gap: 2px;
+}
+.ftab {
+  padding: 3px 14px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid;
+  border-color: #fff #808080 transparent #fff;
+  background: #d4d0c8;
+  position: relative;
+  top: 1px;
+  color: #444;
+}
+.ftab.active {
+  background: #d4d0c8;
+  border-bottom-color: #d4d0c8;
+  color: #000;
+  font-weight: 700;
+  z-index: 1;
+}
+
+/* FORM CANVAS */
+.form-canvas {
+  background: #d4d0c8;
+  padding: 12px 16px 16px;
+  min-height: 380px;
+}
+.form-page { display: none; }
+.form-page.active { display: block; }
+
+/* FORM TITLE */
+.form-title-block {
+  background: #d4d0c8;
+  border: 1px solid;
+  border-color: #808080 #fff #fff #808080;
+  padding: 4px 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.form-title-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #000080;
+}
+
+/* FIELD ROWS */
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.field-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.field-label {
+  font-size: 11px;
+  color: #000;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+.field-required { color: #aa0000; }
+
+/* INPUT FIELDS — sunken/inset appearance */
+input[type=text], input[type=password], input[type=date], select {
+  font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  background: white;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-bottom: 1px solid #dfdfdf;
+  border-right: 1px solid #dfdfdf;
+  outline: none;
+  padding: 1px 2px;
+  height: 19px;
+  color: #000;
+}
+input[type=text]:focus, input[type=password]:focus, input[type=date]:focus, select:focus {
+  border-color: #000;
+}
+input[readonly] { background: #d4d0c8; color: #555; }
+select { padding: 0 2px; }
+
+/* SUNKEN PANEL (for DB block / record display) */
+.sunken-panel {
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-bottom: 1px solid #dfdfdf;
+  border-right: 1px solid #dfdfdf;
+  background: white;
+  padding: 4px;
+  margin-bottom: 8px;
+}
+
+/* RAISED PANEL (for grouped fields) */
+.raised-panel {
+  border: 1px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+.raised-panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #000080;
+}
+
+/* BUTTONS — raised/outset 3D appearance */
+button, .btn {
+  font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  background: #d4d0c8;
+  border: 1px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  padding: 2px 14px;
+  min-width: 70px;
+  cursor: pointer;
+  height: 22px;
+  white-space: nowrap;
+}
+button:hover { background: #e0dcda; }
+button:active, button.pressed {
+  border-color: #808080 #dfdfdf #dfdfdf #808080;
+  padding: 3px 13px 1px 15px;
+}
+button:focus { outline: 1px dotted #000; outline-offset: -3px; }
+.btn-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+
+/* RECORD BLOCK TABLE */
+.record-block {
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-bottom: 1px solid #dfdfdf;
+  border-right: 1px solid #dfdfdf;
+  margin-bottom: 8px;
+  overflow-x: auto;
+}
+.record-block table { border-collapse: collapse; width: 100%; min-width: 600px; font-size: 11px; }
+.record-block th {
+  background: #000080;
+  color: white;
+  padding: 2px 6px;
+  text-align: left;
+  font-weight: 700;
+  white-space: nowrap;
+  border-right: 1px solid #4040a0;
+}
+.record-block td {
+  padding: 1px 6px;
+  border-bottom: 1px solid #e8e8e8;
+  white-space: nowrap;
+  border-right: 1px solid #f0f0f0;
+}
+.record-block tr:nth-child(even) td { background: #f5f5f5; }
+.record-block tr.current-record td { background: #000080; color: white; }
+.record-block tr:hover td { background: #d4d0f0; }
+.record-action-btn {
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 10px;
+  background: #d4d0c8;
+  border: 1px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  padding: 0 6px;
+  cursor: pointer;
+  height: 17px;
+  margin-right: 2px;
+}
+.record-action-btn:active { border-color: #808080 #dfdfdf #dfdfdf #808080; }
+.record-action-btn.approve { color: #006600; font-weight: 700; }
+.record-action-btn.reject { color: #aa0000; font-weight: 700; }
+
+/* STATUS BAR */
+.status-bar {
+  background: #d4d0c8;
+  border-top: 1px solid #808080;
+  padding: 2px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: #555;
+}
+.status-item {
+  border: 1px solid;
+  border-color: #808080 #dfdfdf #dfdfdf #808080;
+  padding: 1px 6px;
+  font-size: 10px;
+}
+
+/* RESULT DISPLAY */
+.result-box {
+  border: 1px solid #808080;
+  background: #ffffff;
+  padding: 8px 10px;
+  margin-top: 8px;
+  min-height: 50px;
+  font-size: 11px;
+  display: none;
+}
+.result-box.visible { display: block; }
+.result-approved { color: #006600; font-weight: 700; }
+.result-pending { color: #333; }
+.result-rejected { color: #aa0000; font-weight: 700; }
+
+/* MESSAGE BOX overlay */
+.msgbox-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: transparent; z-index: 100; align-items: center; justify-content: center; }
+.msgbox-overlay.show { display: flex; }
+.msgbox {
+  background: #d4d0c8;
+  border: 2px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  box-shadow: 3px 3px 0 #000;
+  min-width: 260px;
+  max-width: 360px;
+}
+.msgbox-title {
+  background: linear-gradient(to right, #000082, #1084d0);
+  color: white;
+  padding: 2px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.msgbox-body { padding: 14px 16px 10px; display: flex; gap: 12px; align-items: flex-start; }
+.msgbox-icon { font-size: 22px; line-height: 1; flex-shrink: 0; }
+.msgbox-text { font-size: 11px; line-height: 1.5; }
+.msgbox-btns { padding: 0 16px 12px; display: flex; justify-content: center; }
+</style>
+
+<!-- DEMO LABEL -->
+<div class="demo-label">DELIVERABLE 1: Legacy-Faithful Replica — Oracle Forms UI rebuilt in HTML/CSS · Calls extracted PL/SQL packages</div>
+
+<!-- ORACLE FORMS WINDOW -->
+<div class="forms-window">
+
+  <!-- TITLE BAR -->
+  <div class="title-bar">
+    <div class="title-bar-left">
+      <div class="title-icon">F</div>
+      <span id="windowTitle">Oracle Forms Runtime - G1_ACCOUNTOPENING [online_banking]</span>
+    </div>
+    <div class="title-bar-btns">
+      <div class="title-btn">_</div>
+      <div class="title-btn">□</div>
+      <div class="title-btn">✕</div>
+    </div>
+  </div>
+
+  <!-- MENU BAR -->
+  <div class="menu-bar">
+    <span class="menu-item"><span>F</span>ile</span>
+    <span class="menu-item"><span>E</span>dit</span>
+    <span class="menu-item"><span>B</span>lock</span>
+    <span class="menu-item">Fie<span>l</span>d</span>
+    <span class="menu-item"><span>R</span>ecord</span>
+    <span class="menu-item"><span>Q</span>uery</span>
+    <span class="menu-item"><span>W</span>indow</span>
+    <span class="menu-item"><span>H</span>elp</span>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="tb-btn" title="Save">💾</div>
+    <div class="tb-btn" title="Print">🖨</div>
+    <div class="tb-sep"></div>
+    <div class="tb-btn" title="Previous Record">◀</div>
+    <div class="tb-btn" title="Next Record">▶</div>
+    <div class="tb-sep"></div>
+    <div class="tb-btn" title="Insert Record">+</div>
+    <div class="tb-btn" title="Delete Record">−</div>
+    <div class="tb-sep"></div>
+    <div class="tb-btn" title="Execute Query">▶▶</div>
+    <div class="tb-btn" title="Clear Record">✕</div>
+  </div>
+
+  <!-- FORM TABS (simulating open forms) -->
+  <div class="form-tabs">
+    <div class="ftab active" id="tab0" onclick="showForm(0, 'G1_ACCOUNTOPENING')">G1_ACCOUNTOPENING</div>
+    <div class="ftab" id="tab1" onclick="showForm(1, 'G1_MANAGERAPPROVAL')">G1_MANAGERAPPROVAL</div>
+    <div class="ftab" id="tab2" onclick="showForm(2, 'G1_CHECKSTATUS1')">G1_CHECKSTATUS1</div>
+  </div>
+
+  <!-- FORM CANVAS -->
+  <div class="form-canvas">
+
+    <!-- PAGE 0: Account Opening -->
+    <div class="form-page active" id="page0">
+      <div class="form-title-block">
+        <div class="form-title-text">NEW ACCOUNT OPENING REQUEST</div>
+        <div style="margin-left:auto;color:#888;font-size:10px">Block: G1_ACCOUNTOPENING · Table: GROUP1_ACCOUNTREQUEST</div>
+      </div>
+
+      <div class="raised-panel">
+        <div class="raised-panel-title">APPLICATION DETAILS</div>
+        <div class="field-row">
+          <div class="field-group">
+            <span class="field-label">Request ID<span class="field-required">*</span></span>
+            <input type="text" id="reqId" value="10" readonly style="width:60px" title="Auto-generated: MAX(REQUESTID)+10">
+          </div>
+          <div class="field-group">
+            <span class="field-label">Branch<span class="field-required">*</span></span>
+            <select id="branch" style="width:110px">
+              <option value="">-- select --</option>
+              <option>NORTH</option><option>SOUTH</option><option>EAST</option><option>WEST</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <span class="field-label">Account Type<span class="field-required">*</span></span>
+            <select id="acctType" style="width:110px">
+              <option value="">-- select --</option>
+              <option>SAVINGS</option><option>CURRENT</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="raised-panel">
+        <div class="raised-panel-title">PERSONAL INFORMATION</div>
+        <div class="field-row">
+          <div class="field-group">
+            <span class="field-label">Title<span class="field-required">*</span></span>
+            <select id="title" style="width:60px">
+              <option value="">--</option>
+              <option>MR</option><option>MRS</option><option>MISS</option><option>DR</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <span class="field-label">First Name<span class="field-required">*</span></span>
+            <input type="text" id="fname" style="width:120px" maxlength="15">
+          </div>
+          <div class="field-group">
+            <span class="field-label">Last Name<span class="field-required">*</span></span>
+            <input type="text" id="lname" style="width:120px" maxlength="15">
+          </div>
+        </div>
+        <div class="field-row" style="margin-top:4px">
+          <div class="field-group">
+            <span class="field-label">Date of Birth<span class="field-required">*</span></span>
+            <input type="text" id="dob" placeholder="DD-MON-YY" style="width:90px" maxlength="9">
+          </div>
+        </div>
+      </div>
+
+      <div class="raised-panel">
+        <div class="raised-panel-title">CONTACT INFORMATION</div>
+        <div class="field-row">
+          <div class="field-group">
+            <span class="field-label">Work Phone<span class="field-required">*</span> (10 digits)</span>
+            <input type="text" id="wphone" style="width:100px" maxlength="10">
+          </div>
+          <div class="field-group">
+            <span class="field-label">Home Phone<span class="field-required">*</span> (10 digits)</span>
+            <input type="text" id="hphone" style="width:100px" maxlength="10">
+          </div>
+        </div>
+        <div class="field-row" style="margin-top:4px">
+          <div class="field-group">
+            <span class="field-label">Address<span class="field-required">*</span></span>
+            <input type="text" id="address" style="width:220px" maxlength="30">
+          </div>
+        </div>
+        <div class="field-row" style="margin-top:4px">
+          <div class="field-group">
+            <span class="field-label">State<span class="field-required">*</span></span>
+            <input type="text" id="state" style="width:100px" maxlength="15">
+          </div>
+          <div class="field-group">
+            <span class="field-label">Zip<span class="field-required">*</span></span>
+            <input type="text" id="zip" style="width:70px" maxlength="10">
+          </div>
+        </div>
+        <div class="field-row" style="margin-top:4px">
+          <div class="field-group">
+            <span class="field-label">Email<span class="field-required">*</span></span>
+            <input type="text" id="email" style="width:200px" maxlength="30">
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="submitAccountOpening()">SUBMIT</button>
+        <button onclick="clearForm('page0')">CLEAR</button>
+        <button onclick="exitForm()">EXIT</button>
+      </div>
+    </div>
+
+    <!-- PAGE 1: Manager Approval -->
+    <div class="form-page" id="page1">
+      <div class="form-title-block">
+        <div class="form-title-text">ACCOUNT APPROVAL — PENDING REQUESTS</div>
+        <div style="margin-left:auto;color:#888;font-size:10px">Block: G1_ACCOUNTREQUEST_B2 · WHERE Status='ENTERED'</div>
+      </div>
+
+      <div style="font-size:10px;color:#666;margin-bottom:6px">Showing ENTERED requests · pkg_ob_managerapproval.approve_request / reject_request</div>
+
+      <div class="record-block">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:70px">REQ ID</th>
+              <th style="width:80px">FIRST NAME</th>
+              <th style="width:80px">LAST NAME</th>
+              <th style="width:80px">BRANCH</th>
+              <th style="width:90px">ACCOUNT TYPE</th>
+              <th style="width:160px">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="approvalRows">
+            <tr class="current-record" data-reqid="10">
+              <td>10</td><td>Arun</td><td>Kumar</td><td>NORTH</td><td>SAVINGS</td>
+              <td>
+                <button class="record-action-btn approve" onclick="approveRow(this,10,'SAVINGS','Arun')">APPROVE</button>
+                <button class="record-action-btn reject" onclick="rejectRow(this,10)">REJECT</button>
+                <button class="record-action-btn" onclick="detailsRow(10)">DETAILS</button>
+              </td>
+            </tr>
+            <tr data-reqid="20">
+              <td>20</td><td>Priya</td><td>Sharma</td><td>SOUTH</td><td>CURRENT</td>
+              <td>
+                <button class="record-action-btn approve" onclick="approveRow(this,20,'CURRENT','Priya')">APPROVE</button>
+                <button class="record-action-btn reject" onclick="rejectRow(this,20)">REJECT</button>
+                <button class="record-action-btn" onclick="detailsRow(20)">DETAILS</button>
+              </td>
+            </tr>
+            <tr data-reqid="30">
+              <td>30</td><td>Rajesh</td><td>Patel</td><td>EAST</td><td>SAVINGS</td>
+              <td>
+                <button class="record-action-btn approve" onclick="approveRow(this,30,'SAVINGS','Raj')">APPROVE</button>
+                <button class="record-action-btn reject" onclick="rejectRow(this,30)">REJECT</button>
+                <button class="record-action-btn" onclick="detailsRow(30)">DETAILS</button>
+              </td>
+            </tr>
+            <tr data-reqid="40">
+              <td>40</td><td>Sneha</td><td>Nair</td><td>WEST</td><td>CURRENT</td>
+              <td>
+                <button class="record-action-btn approve" onclick="approveRow(this,40,'CURRENT','Sne')">APPROVE</button>
+                <button class="record-action-btn reject" onclick="rejectRow(this,40)">REJECT</button>
+                <button class="record-action-btn" onclick="detailsRow(40)">DETAILS</button>
+              </td>
+            </tr>
+            <tr data-reqid="50">
+              <td>50</td><td>Vikram</td><td>Singh</td><td>NORTH</td><td>SAVINGS</td>
+              <td>
+                <button class="record-action-btn approve" onclick="approveRow(this,50,'SAVINGS','Vik')">APPROVE</button>
+                <button class="record-action-btn reject" onclick="rejectRow(this,50)">REJECT</button>
+                <button class="record-action-btn" onclick="detailsRow(50)">DETAILS</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="font-size:10px;color:#666;margin-bottom:6px">5 records displayed · scroll for more</div>
+
+      <div class="raised-panel" style="background:#fffdf0;border-color:#c8c490 #fff8a0 #fff8a0 #c8c490">
+        <div class="raised-panel-title" style="color:#555;font-size:10px">ALGORITHM: Account# = AccountType(2) ‖ FirstName(3) ‖ lpad(seq,5,'0')</div>
+        <div style="font-family:'Courier New',monospace;font-size:10px;color:#333;margin-top:4px">
+          Example: AccountType=SAVINGS, FirstName=Arun → <strong>SAaru00001</strong>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="showQuery()">SHOW</button>
+        <button onclick="showMsg('G1_CUSTOMERDETAIL form would open here (read-only view of selected request).')">DETAILS</button>
+      </div>
+    </div>
+
+    <!-- PAGE 2: Check Status -->
+    <div class="form-page" id="page2">
+      <div class="form-title-block">
+        <div class="form-title-text">CHECK APPLICATION STATUS</div>
+        <div style="margin-left:auto;color:#888;font-size:10px">Block: G1_CHECKSTATUS1 · pkg_ob_checkstatus.check_request_status</div>
+      </div>
+
+      <div class="raised-panel">
+        <div class="field-row">
+          <div class="field-group">
+            <span class="field-label">Request ID<span class="field-required">*</span></span>
+            <input type="text" id="checkReqId" style="width:80px" placeholder="e.g. 10">
+          </div>
+          <div style="margin-left:8px">
+            <button onclick="checkStatus()">CHECK</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="raised-panel" id="statusResult" style="display:none">
+        <div class="raised-panel-title">RESULT</div>
+        <div id="statusMsg" style="font-size:11px;line-height:1.7"></div>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="clearCheckStatus()">CLEAR</button>
+        <button onclick="exitForm()">EXIT</button>
+      </div>
+
+      <div style="margin-top:16px;font-size:10px;color:#888;border-top:1px solid #b0b0b0;padding-top:8px">
+        DEMO DATA: Request IDs 10, 20 = ENTERED (pending) · 30 = APPROVED (acct# SAraj00001) · 40 = REJECTED · 50 = ENTERED
+      </div>
+    </div>
+
+  </div><!-- /form-canvas -->
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span id="statusText">Record: 1/5 | Normal</span>
+    <div style="display:flex;gap:6px">
+      <span class="status-item" id="blockName">BLOCK: G1_ACCOUNTOPENING</span>
+      <span class="status-item">ORACLE FORMS 10g</span>
+    </div>
+  </div>
+
+</div><!-- /forms-window -->
+
+<!-- MESSAGE BOX (FND_MESSAGE equivalent) -->
+<div class="msgbox-overlay" id="msgOverlay" onclick="closeMsgBox()">
+  <div class="msgbox" onclick="event.stopPropagation()">
+    <div class="msgbox-title">
+      <span>Message</span>
+      <span style="cursor:pointer" onclick="closeMsgBox()">✕</span>
+    </div>
+    <div class="msgbox-body">
+      <div class="msgbox-icon" id="msgIcon">ℹ</div>
+      <div class="msgbox-text" id="msgText"></div>
+    </div>
+    <div class="msgbox-btns">
+      <button onclick="closeMsgBox()" style="min-width:60px">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Simulated DB state
+const db = {
+  requests: {
+    10: { status:'ENTERED', firstName:'Arun', lastName:'Kumar', acctType:'SAVINGS' },
+    20: { status:'ENTERED', firstName:'Priya', lastName:'Sharma', acctType:'CURRENT' },
+    30: { status:'APPROVED', firstName:'Rajesh', lastName:'Patel', acctType:'SAVINGS', acctNum:'SAraj00001' },
+    40: { status:'REJECTED', firstName:'Sneha', lastName:'Nair', acctType:'CURRENT' },
+    50: { status:'ENTERED', firstName:'Vikram', lastName:'Singh', acctType:'SAVINGS' }
+  }
+};
+
+function showForm(idx, name) {
+  document.querySelectorAll('.form-page').forEach((p,i) => p.classList.toggle('active', i===idx));
+  document.querySelectorAll('.ftab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.getElementById('windowTitle').textContent = `Oracle Forms Runtime - ${name} [online_banking]`;
+  document.getElementById('blockName').textContent = `BLOCK: ${name}`;
+  document.getElementById('statusText').textContent = 'Record: 1 | Normal';
+}
+
+function showMsg(txt, icon='ℹ') {
+  document.getElementById('msgText').textContent = txt;
+  document.getElementById('msgIcon').textContent = icon;
+  document.getElementById('msgOverlay').classList.add('show');
+}
+function closeMsgBox() { document.getElementById('msgOverlay').classList.remove('show'); }
+
+// --- ACCOUNT OPENING ---
+function submitAccountOpening() {
+  const branch = document.getElementById('branch').value;
+  const acctType = document.getElementById('acctType').value;
+  const title = document.getElementById('title').value;
+  const fname = document.getElementById('fname').value.trim();
+  const lname = document.getElementById('lname').value.trim();
+  const dob = document.getElementById('dob').value.trim();
+  const wphone = document.getElementById('wphone').value.trim();
+  const hphone = document.getElementById('hphone').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const state = document.getElementById('state').value.trim();
+  const zip = document.getElementById('zip').value.trim();
+  const email = document.getElementById('email').value.trim();
+
+  // Replicate Forms validation sequence
+  if (!branch) { showMsg('BRANCH IS REQUIRED', '⚠'); return; }
+  if (!acctType) { showMsg('ACCOUNT TYPE IS REQUIRED', '⚠'); return; }
+  if (!title) { showMsg('TITLE IS REQUIRED', '⚠'); return; }
+  if (!fname) { showMsg('FIRST NAME IS REQUIRED', '⚠'); return; }
+  if (!lname) { showMsg('LAST NAME IS REQUIRED', '⚠'); return; }
+  if (!dob) { showMsg('DATE OF BIRTH IS REQUIRED', '⚠'); return; }
+  if (wphone.length !== 10 || isNaN(wphone)) { showMsg('ENTER VALID NUMBER (Work Phone must be 10 digits)', '⚠'); return; }
+  if (hphone.length !== 10 || isNaN(hphone)) { showMsg('ENTER VALID NUMBER (Home Phone must be 10 digits)', '⚠'); return; }
+  if (!address) { showMsg('ADDRESS IS REQUIRED', '⚠'); return; }
+  if (!state) { showMsg('STATE IS REQUIRED', '⚠'); return; }
+  if (!zip) { showMsg('ZIP IS REQUIRED', '⚠'); return; }
+  if (!email.includes('@') || !email.endsWith('.com')) { showMsg('Please enter a valid email address!', '⚠'); return; }
+
+  // Simulate INSERT — pkg_ob_accountopening.submit_account_request
+  const newId = parseInt(document.getElementById('reqId').value);
+  db.requests[newId] = { status:'ENTERED', firstName: fname, lastName: lname, acctType };
+  document.getElementById('reqId').value = newId + 10;
+
+  showMsg(`Application submitted successfully.\nRequest ID: ${newId}\nStatus: ENTERED — awaiting manager approval.\n\n[Calls: pkg_ob_accountopening.submit_account_request]`, 'ℹ');
+}
+
+function clearForm(pageId) {
+  document.querySelectorAll(`#${pageId} input[type=text], #${pageId} input[type=password]`)
+    .forEach(el => el.value = '');
+  document.querySelectorAll(`#${pageId} select`).forEach(el => el.selectedIndex = 0);
+}
+
+function exitForm() { showMsg('EXIT: In Oracle Forms, this would call EXIT_FORM. In APEX, redirect to home page.'); }
+
+// --- MANAGER APPROVAL ---
+function approveRow(btn, reqId, acctType, namePrefix) {
+  const row = btn.closest('tr');
+  // Simulate: pkg_ob_managerapproval.approve_request
+  // Algorithm: AccountType(2) || FirstName(3) || lpad(seq,5,'0')
+  const seq = String(Object.values(db.requests).filter(r=>r.acctNum).length + 1).padStart(5,'0');
+  const acctNum = acctType.substring(0,2).toUpperCase() + namePrefix.substring(0,3) + seq;
+  if (db.requests[reqId]) db.requests[reqId] = { ...db.requests[reqId], status:'APPROVED', acctNum };
+  row.style.background = '#d0f0d0';
+  row.querySelectorAll('button').forEach(b => { b.disabled = true; b.style.color = '#999'; });
+  const cells = row.querySelectorAll('td');
+  if (cells[4]) cells[4].textContent = 'APPROVED';
+  showMsg(`Request ${reqId} APPROVED.\nAccount Number generated: ${acctNum}\n\nINSERT into GRP1_REGISTEREDINFO with password11='0000'\n[Calls: pkg_ob_managerapproval.approve_request]`);
+}
+
+function rejectRow(btn, reqId) {
+  const row = btn.closest('tr');
+  if (db.requests[reqId]) db.requests[reqId].status = 'REJECTED';
+  row.style.background = '#f0d0d0';
+  row.querySelectorAll('button').forEach(b => { b.disabled = true; b.style.color = '#999'; });
+  const cells = row.querySelectorAll('td');
+  if (cells[4]) cells[4].textContent = 'REJECTED';
+  showMsg(`Request ${reqId} REJECTED.\nUPDATE GROUP1_ACCOUNTREQUEST SET Status='REJECTED'\n[Calls: pkg_ob_managerapproval.reject_request]`);
+}
+
+function detailsRow(reqId) {
+  showMsg(`DETAILS: Would CALL_FORM → G1_CUSTOMERDETAIL with P5=${reqId}\nIn APEX: redirect to Customer Detail page with P5_REQUEST_ID=${reqId}`);
+}
+
+function showQuery() {
+  showMsg('EXECUTE_QUERY on G1_ACCOUNTREQUEST_B2 WHERE Status=\'ENTERED\'\n[Refreshes the record block — equivalent to Interactive Report refresh in APEX]');
+}
+
+// --- CHECK STATUS ---
+function checkStatus() {
+  const rid = parseInt(document.getElementById('checkReqId').value.trim());
+  const panel = document.getElementById('statusResult');
+  const msgEl = document.getElementById('statusMsg');
+  panel.style.display = 'block';
+
+  if (!rid || !db.requests[rid]) {
+    msgEl.innerHTML = '<span style="color:#aa0000">No application found for Request ID: ' + (rid||'—') + '</span>';
+    return;
+  }
+
+  const req = db.requests[rid];
+  if (req.status === 'APPROVED') {
+    msgEl.innerHTML = `<span class="result-approved">✓ APPLICATION APPROVED</span><br>Account Number: <strong>${req.acctNum}</strong><br><br>[pkg_ob_checkstatus.check_request_status → Status=APPROVED, SELECT Account_Number FROM GRP1_REGISTEREDINFO]`;
+  } else if (req.status === 'ENTERED') {
+    msgEl.innerHTML = `<span class="result-pending">⏳ APPLICATION PENDING</span><br>Your application is currently under review by the manager.<br><br>[pkg_ob_checkstatus.check_request_status → Status=ENTERED]`;
+  } else if (req.status === 'REJECTED') {
+    msgEl.innerHTML = `<span class="result-rejected">✗ APPLICATION REJECTED</span><br>Your application has not been approved. Please visit a branch for assistance.<br><br>[pkg_ob_checkstatus.check_request_status → Status=REJECTED]`;
+  }
+}
+
+function clearCheckStatus() {
+  document.getElementById('checkReqId').value = '';
+  document.getElementById('statusResult').style.display = 'none';
+}
+</script>
