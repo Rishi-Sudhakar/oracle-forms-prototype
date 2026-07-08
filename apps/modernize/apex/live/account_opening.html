@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>G1_ACCOUNTOPENING — Live ORDS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,'MS Sans Serif',Arial,sans-serif;font-size:11px;background:#008080;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px;gap:8px}
+.config-banner{width:100%;max-width:800px;background:#f5e642;border:2px solid #000;padding:8px 12px;font-family:'Courier New',monospace;font-size:11px}
+.config-banner input{font-size:11px;padding:2px 4px;width:380px;margin:0 6px}
+.live-badge{width:100%;max-width:800px;background:#1a6eff;color:#fff;border:2px solid #000;padding:5px 12px;font-family:'Courier New',monospace;font-size:10px;letter-spacing:2px;font-weight:700}
+.forms-window{width:100%;max-width:800px;border:2px solid;border-color:#dfdfdf #808080 #808080 #dfdfdf;box-shadow:2px 2px 0 #000;background:#d4d0c8}
+.title-bar{background:linear-gradient(to right,#000082,#1084d0);color:white;padding:3px 4px;display:flex;align-items:center;justify-content:space-between}
+.title-bar-left{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700}
+.title-icon{width:15px;height:15px;background:#ff8;border:1px solid #c40;font-size:9px;display:flex;align-items:center;justify-content:center;color:#c40;font-weight:900}
+.title-btns{display:flex;gap:2px}
+.tbtn{width:16px;height:14px;background:#d4d0c8;border:1px solid;border-color:#fff #808080 #808080 #fff;font-size:9px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.menu-bar{background:#d4d0c8;border-bottom:1px solid #808080;padding:2px 4px;display:flex;gap:0}
+.menu-item{padding:1px 8px;cursor:pointer}
+.menu-item:hover{background:#000080;color:white}
+.form-canvas{background:#d4d0c8;padding:12px 16px 16px}
+.form-title-block{background:#d4d0c8;border:1px solid;border-color:#808080 #fff #fff #808080;padding:4px 10px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.form-title-text{font-size:12px;font-weight:700;color:#000080}
+.form-badge{font-family:'Courier New',monospace;font-size:9px;background:#1a6eff;color:#fff;padding:2px 6px;font-weight:700}
+.section-panel{border:1px solid;border-color:#dfdfdf #808080 #808080 #dfdfdf;padding:8px 10px;margin-bottom:8px}
+.section-title{font-size:11px;font-weight:700;color:#000080;margin-bottom:6px;border-bottom:1px solid #b0b0b0;padding-bottom:3px}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}
+.field-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.field-label{font-size:11px;color:#000;white-space:nowrap;min-width:90px;text-align:right}
+.req{color:#a00}
+input[type=text],input[type=date],select{font-family:Tahoma,Arial,sans-serif;font-size:11px;background:white;border-top:1px solid #808080;border-left:1px solid #808080;border-bottom:1px solid #dfdfdf;border-right:1px solid #dfdfdf;outline:none;padding:1px 3px;height:19px}
+input[type=text]:focus,input[type=date]:focus,select:focus{border-color:#000}
+select{height:21px;cursor:pointer}
+button{font-family:Tahoma,Arial,sans-serif;font-size:11px;background:#d4d0c8;border:1px solid;border-color:#dfdfdf #808080 #808080 #dfdfdf;padding:2px 14px;min-width:80px;cursor:pointer;height:22px}
+button:active{border-color:#808080 #dfdfdf #dfdfdf #808080;padding:3px 13px 1px 15px}
+button.primary{font-weight:700}
+.msg-box{border:1px solid;padding:6px 10px;margin-top:8px;font-size:11px;display:none}
+.msg-box.show{display:block}
+.msg-success{border-color:#006600;background:#dfffdf;color:#004400}
+.msg-error{border-color:#a00;background:#ffeee;color:#800}
+.status-bar{background:#d4d0c8;border-top:1px solid #808080;padding:2px 8px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#555}
+.status-item{border:1px solid;border-color:#808080 #dfdfdf #dfdfdf #808080;padding:1px 6px;font-size:10px}
+.spinner{display:none;font-size:10px;color:#888;margin-left:8px}
+.spinner.show{display:inline}
+</style>
+</head>
+<body>
+
+<div class="config-banner" id="configBanner" style="display:none">
+  ⚠ <strong>ORDS URL not configured.</strong>
+  Enter your DB ORDS base URL:
+  <input type="text" id="ordsInput" placeholder="https://YOUR_DB.adb.REGION.oraclecloudapps.com/ords/admin/ob">
+  <button onclick="saveOrds()">Save</button>
+  <div style="margin-top:4px;font-size:10px;color:#555">OCI Console → Autonomous DB → Tool Configuration → ORDS URL. Append <code>/admin/ob</code></div>
+</div>
+
+<div class="live-badge">● LIVE — ORDS-BACKED · formsproto Autonomous DB 23ai · pkg_ob_accountopening.submit_account_request</div>
+
+<div class="forms-window">
+  <div class="title-bar">
+    <div class="title-bar-left">
+      <div class="title-icon">F</div>
+      <span>Oracle Forms Runtime - G1_ACCOUNTOPENING [online_banking] [LIVE]</span>
+    </div>
+    <div class="title-btns">
+      <div class="tbtn">_</div><div class="tbtn">□</div><div class="tbtn">✕</div>
+    </div>
+  </div>
+  <div class="menu-bar">
+    <span class="menu-item">File</span><span class="menu-item">Edit</span>
+    <span class="menu-item">Block</span><span class="menu-item">Query</span>
+    <span class="menu-item">Window</span><span class="menu-item">Help</span>
+  </div>
+
+  <div class="form-canvas">
+    <div class="form-title-block">
+      <div class="form-title-text">ACCOUNT OPENING REQUEST FORM</div>
+      <span class="form-badge">LIVE · INSERT → GROUP1_ACCOUNTREQUEST</span>
+    </div>
+
+    <!-- Branch & Account Type -->
+    <div class="section-panel">
+      <div class="section-title">BRANCH &amp; ACCOUNT DETAILS</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <div class="field-row">
+          <span class="field-label">Branch <span class="req">*</span></span>
+          <select id="branch" style="width:140px">
+            <option value="">-- Select --</option>
+            <option>NORTH</option><option>SOUTH</option><option>EAST</option><option>WEST</option><option>CENTRAL</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Account Type <span class="req">*</span></span>
+          <select id="account_type" style="width:140px">
+            <option value="">-- Select --</option>
+            <option value="SAVINGS">SAVINGS</option>
+            <option value="CHECKING">CHECKING</option>
+            <option value="CURRENT">CURRENT</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Info -->
+    <div class="section-panel">
+      <div class="section-title">PERSONAL INFORMATION</div>
+      <div class="field-grid">
+        <div class="field-row">
+          <span class="field-label">Title <span class="req">*</span></span>
+          <select id="title" style="width:80px">
+            <option value="">--</option>
+            <option>Mr</option><option>Ms</option><option>Mrs</option><option>Dr</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Date of Birth <span class="req">*</span></span>
+          <input type="date" id="dob" style="width:140px">
+        </div>
+        <div class="field-row">
+          <span class="field-label">First Name <span class="req">*</span></span>
+          <input type="text" id="first_name" style="width:160px" maxlength="50">
+        </div>
+        <div class="field-row">
+          <span class="field-label">Last Name <span class="req">*</span></span>
+          <input type="text" id="last_name" style="width:160px" maxlength="50">
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="section-panel">
+      <div class="section-title">CONTACT INFORMATION</div>
+      <div class="field-grid">
+        <div class="field-row">
+          <span class="field-label">Work Phone <span class="req">*</span></span>
+          <input type="text" id="work_phone" style="width:120px" maxlength="10" placeholder="10 digits">
+        </div>
+        <div class="field-row">
+          <span class="field-label">Home Phone</span>
+          <input type="text" id="home_phone" style="width:120px" maxlength="10" placeholder="10 digits">
+        </div>
+        <div class="field-row" style="grid-column:1/-1">
+          <span class="field-label">Email <span class="req">*</span></span>
+          <input type="text" id="email" style="width:260px" maxlength="100" placeholder="user@example.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="section-panel">
+      <div class="section-title">ADDRESS</div>
+      <div class="field-grid">
+        <div class="field-row" style="grid-column:1/-1">
+          <span class="field-label">Address <span class="req">*</span></span>
+          <input type="text" id="address" style="width:340px" maxlength="200">
+        </div>
+        <div class="field-row">
+          <span class="field-label">State <span class="req">*</span></span>
+          <input type="text" id="state" style="width:120px" maxlength="50">
+        </div>
+        <div class="field-row">
+          <span class="field-label">ZIP <span class="req">*</span></span>
+          <input type="text" id="zip" style="width:80px" maxlength="10">
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div style="display:flex;gap:6px;align-items:center;margin-top:4px">
+      <button class="primary" onclick="submitForm()">SUBMIT APPLICATION</button>
+      <button onclick="clearForm()">CLEAR</button>
+      <button onclick="window.location='../dashboard/index.html'">HOME</button>
+      <span class="spinner" id="spinner">Submitting to DB...</span>
+    </div>
+
+    <div class="msg-box" id="msgBox"></div>
+
+    <div style="margin-top:10px;font-size:10px;color:#888;border-top:1px solid #b0b0b0;padding-top:6px">
+      POST /ob/requests/ → pkg_ob_accountopening.submit_account_request → INSERT GROUP1_ACCOUNTREQUEST
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <span id="statusText">Enter record details — <span style="color:#a00">*</span> required</span>
+    <div style="display:flex;gap:6px">
+      <span class="status-item">BLOCK: G1_ACCOUNTOPENING</span>
+      <span class="status-item">ORACLE FORMS 10g → ORDS</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE_KEY = 'ords_base';
+function getBase() { return localStorage.getItem(BASE_KEY); }
+function saveOrds() {
+  const v = document.getElementById('ordsInput').value.trim().replace(/\/$/,'');
+  if (!v) return;
+  localStorage.setItem(BASE_KEY, v);
+  document.getElementById('configBanner').style.display = 'none';
+}
+function init() {
+  if (!getBase()) document.getElementById('configBanner').style.display = 'block';
+}
+
+function showMsg(text, ok) {
+  const b = document.getElementById('msgBox');
+  b.className = 'msg-box show ' + (ok ? 'msg-success' : 'msg-error');
+  b.innerHTML = text;
+}
+
+function clearForm() {
+  ['branch','account_type','title','first_name','last_name','dob','work_phone','home_phone','address','state','zip','email']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value=''; });
+  const b = document.getElementById('msgBox');
+  b.className = 'msg-box';
+  document.getElementById('statusText').textContent = "Form cleared — enter record details";
+}
+
+async function submitForm() {
+  const base = getBase();
+  if (!base) { document.getElementById('configBanner').style.display = 'block'; return; }
+
+  const f = id => document.getElementById(id).value.trim();
+  const req = {
+    branch:       f('branch'),
+    account_type: f('account_type'),
+    title:        f('title'),
+    first_name:   f('first_name'),
+    last_name:    f('last_name'),
+    dob:          f('dob'),
+    work_phone:   f('work_phone'),
+    address:      f('address'),
+    state:        f('state'),
+    zip:          f('zip'),
+    email:        f('email')
+  };
+  const hp = f('home_phone');
+  if (hp) req.home_phone = hp;
+
+  // Basic client-side validation
+  const required = ['branch','account_type','title','first_name','last_name','dob','work_phone','address','state','zip','email'];
+  for (const k of required) {
+    if (!req[k]) { showMsg('Error: ' + k.replace('_',' ').toUpperCase() + ' is required.', false); return; }
+  }
+  if (!/^\d{10}$/.test(req.work_phone)) { showMsg('Error: WORK PHONE must be exactly 10 digits.', false); return; }
+  if (req.home_phone && !/^\d{10}$/.test(req.home_phone)) { showMsg('Error: HOME PHONE must be exactly 10 digits (or leave blank).', false); return; }
+  if (!req.email.includes('@') || !req.email.endsWith('.com')) { showMsg('Error: EMAIL must contain @ and end with .com', false); return; }
+
+  document.getElementById('spinner').classList.add('show');
+  document.getElementById('statusText').textContent = 'Submitting to formsproto...';
+
+  try {
+    const res = await fetch(`${base}/requests/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(req)
+    });
+    const data = await res.json();
+    if (data.ok) {
+      showMsg(
+        '<strong>✓ APPLICATION SUBMITTED SUCCESSFULLY</strong><br>' +
+        'Request ID: <strong>' + (data.requestId || data.requestid || '—') + '</strong><br>' +
+        'Status: ENTERED (pending manager approval)<br>' +
+        '<span style="font-family:Courier New;font-size:10px">INSERTed into GROUP1_ACCOUNTREQUEST · live formsproto</span>',
+        true
+      );
+      document.getElementById('statusText').textContent = 'Record saved — Request ID: ' + (data.requestId || data.requestid);
+    } else {
+      showMsg('Error from DB: ' + (data.error || 'Unknown error'), false);
+      document.getElementById('statusText').textContent = 'Submission failed';
+    }
+  } catch(e) {
+    showMsg(
+      'Network/CORS error: ' + e.message +
+      '<br>Serve via <code>python3 -m http.server 8080</code> in the apex/ directory, or check ORDS URL.',
+      false
+    );
+    document.getElementById('statusText').textContent = 'Error';
+  }
+  document.getElementById('spinner').classList.remove('show');
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>G1_MANAGERAPPROVAL — Live ORDS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,'MS Sans Serif',Arial,sans-serif;font-size:11px;background:#008080;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px;gap:8px}
+.config-banner{width:100%;max-width:960px;background:#f5e642;border:2px solid #000;padding:8px 12px;font-family:'Courier New',monospace;font-size:11px}
+.config-banner input{font-size:11px;padding:2px 4px;width:400px;margin:0 6px}
+.live-badge{width:100%;max-width:960px;background:#1a6eff;color:#fff;border:2px solid #000;padding:5px 12px;font-family:'Courier New',monospace;font-size:10px;letter-spacing:2px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.forms-window{width:100%;max-width:960px;border:2px solid;border-color:#dfdfdf #808080 #808080 #dfdfdf;box-shadow:2px 2px 0 #000;background:#d4d0c8}
+.title-bar{background:linear-gradient(to right,#000082,#1084d0);color:white;padding:3px 4px;display:flex;align-items:center;justify-content:space-between}
+.title-bar-left{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700}
+.title-icon{width:15px;height:15px;background:#ff8;border:1px solid #c40;font-size:9px;display:flex;align-items:center;justify-content:center;color:#c40;font-weight:900}
+.title-btns{display:flex;gap:2px}
+.tbtn{width:16px;height:14px;background:#d4d0c8;border:1px solid;border-color:#fff #808080 #808080 #fff;font-size:9px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.menu-bar{background:#d4d0c8;border-bottom:1px solid #808080;padding:2px 4px;display:flex;gap:0}
+.menu-item{padding:1px 8px;cursor:pointer}
+.menu-item:hover{background:#000080;color:white}
+.form-canvas{background:#d4d0c8;padding:12px 16px 16px}
+.form-title-block{background:#d4d0c8;border:1px solid;border-color:#808080 #fff #fff #808080;padding:4px 10px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.form-title-text{font-size:12px;font-weight:700;color:#000080}
+.form-badge{font-family:'Courier New',monospace;font-size:9px;background:#1a6eff;color:#fff;padding:2px 6px;font-weight:700}
+.toolbar{display:flex;gap:6px;margin-bottom:8px;align-items:center}
+button{font-family:Tahoma,Arial,sans-serif;font-size:11px;background:#d4d0c8;border:1px solid;border-color:#dfdfdf #808080 #808080 #dfdfdf;padding:2px 14px;min-width:80px;cursor:pointer;height:22px}
+button:active{border-color:#808080 #dfdfdf #dfdfdf #808080;padding:3px 13px 1px 15px}
+button.primary{font-weight:700}
+button.approve-btn{background:#e8ffe8;border-color:#88cc88 #226622 #226622 #88cc88;min-width:72px}
+button.reject-btn{background:#fff0f0;border-color:#ffaaaa #880000 #880000 #ffaaaa;min-width:72px}
+button.approve-btn:disabled,button.reject-btn:disabled{opacity:0.5;cursor:default}
+.block-container{border:1px solid;border-color:#808080 #dfdfdf #dfdfdf #808080;background:#d4d0c8;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead tr{background:#d4d0c8}
+thead th{text-align:left;padding:2px 6px;border-bottom:2px solid #808080;border-right:1px solid #b0b0b0;font-size:11px;font-weight:700;color:#000080;white-space:nowrap}
+tbody tr{background:white}
+tbody tr:nth-child(even){background:#f0f0f0}
+tbody tr.selected{background:#000080;color:white}
+tbody tr.selected td{color:white}
+tbody tr.processing td{background:#ffffd0}
+tbody tr.done-approved td{background:#dfffdf!important;color:#006600}
+tbody tr.done-rejected td{background:#ffe0e0!important;color:#880000}
+td{padding:2px 6px;border-right:1px solid #d0d0d0;border-bottom:1px solid #e8e8e8;vertical-align:top;white-space:nowrap}
+td.action-cell{white-space:nowrap;display:flex;gap:4px;border-right:none;padding:2px 4px}
+.empty-state{padding:20px;text-align:center;color:#888;background:white}
+.spinner{display:none;font-size:10px;color:#888}
+.spinner.show{display:inline}
+.msg-overlay{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#d4d0c8;border:2px solid;border-color:#dfdfdf #808080 #808080 #dfdfdf;padding:16px 20px;min-width:280px;z-index:9999;box-shadow:4px 4px 0 #000;display:none}
+.msg-overlay.show{display:block}
+.msg-overlay-title{background:linear-gradient(to right,#000082,#1084d0);color:white;padding:2px 6px;font-size:11px;font-weight:700;margin:-16px -20px 12px;display:flex;align-items:center;gap:4px}
+.status-bar{background:#d4d0c8;border-top:1px solid #808080;padding:2px 8px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#555}
+.status-item{border:1px solid;border-color:#808080 #dfdfdf #dfdfdf #808080;padding:1px 6px;font-size:10px}
+</style>
+</head>
+<body>
+
+<div class="config-banner" id="configBanner" style="display:none">
+  ⚠ <strong>ORDS URL not configured.</strong>
+  Enter your DB ORDS base URL:
+  <input type="text" id="ordsInput" placeholder="https://YOUR_DB.adb.REGION.oraclecloudapps.com/ords/admin/ob">
+  <button onclick="saveOrds()">Save</button>
+  <div style="margin-top:4px;font-size:10px;color:#555">OCI Console → Autonomous DB → Tool Configuration → ORDS URL. Append <code>/admin/ob</code></div>
+</div>
+
+<div class="live-badge">
+  <span>● LIVE — ORDS-BACKED · formsproto Autonomous DB 23ai · pkg_ob_managerapproval.approve_request / reject_request</span>
+  <span id="liveCount"></span>
+</div>
+
+<div class="forms-window">
+  <div class="title-bar">
+    <div class="title-bar-left">
+      <div class="title-icon">F</div>
+      <span>Oracle Forms Runtime - G1_MANAGERAPPROVAL [online_banking] [LIVE]</span>
+    </div>
+    <div class="title-btns">
+      <div class="tbtn">_</div><div class="tbtn">□</div><div class="tbtn">✕</div>
+    </div>
+  </div>
+  <div class="menu-bar">
+    <span class="menu-item">File</span><span class="menu-item">Edit</span>
+    <span class="menu-item">Block</span><span class="menu-item">Query</span>
+    <span class="menu-item">Window</span><span class="menu-item">Help</span>
+  </div>
+
+  <div class="form-canvas">
+    <div class="form-title-block">
+      <div class="form-title-text">MANAGER APPROVAL — PENDING ACCOUNT REQUESTS</div>
+      <span class="form-badge">LIVE · GROUP1_ACCOUNTREQUEST WHERE Status='ENTERED'</span>
+    </div>
+
+    <div class="toolbar">
+      <button class="primary" onclick="loadPending()">REFRESH / QUERY</button>
+      <button onclick="window.location='../dashboard/index.html'">HOME</button>
+      <span class="spinner" id="spinner">Loading from DB...</span>
+    </div>
+
+    <div class="block-container" id="tableWrap">
+      <div class="empty-state">Click REFRESH / QUERY to load pending requests from formsproto</div>
+    </div>
+
+    <div style="margin-top:10px;font-size:10px;color:#888;border-top:1px solid #b0b0b0;padding-top:6px">
+      GET /ob/pending/ → SELECT … FROM GROUP1_ACCOUNTREQUEST WHERE Status='ENTERED'<br>
+      POST /ob/approve/:id → pkg_ob_managerapproval.approve_request → UPDATE Status='APPROVED', INSERT GRP1_REGISTEREDINFO<br>
+      POST /ob/reject/:id  → pkg_ob_managerapproval.reject_request  → UPDATE Status='REJECTED'
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <span id="statusText">Ready — click REFRESH to query live DB</span>
+    <div style="display:flex;gap:6px">
+      <span class="status-item">BLOCK: G1_MANAGERAPPROVAL_BLOCK</span>
+      <span class="status-item">ORACLE FORMS 10g → ORDS</span>
+    </div>
+  </div>
+</div>
+
+<!-- Message overlay (simulates FND_MESSAGE.SET_STRING) -->
+<div class="msg-overlay" id="msgOverlay">
+  <div class="msg-overlay-title"><span>&#x1F4AC;</span> <span id="msgTitle">Message</span></div>
+  <div id="msgBody" style="font-size:11px;margin-bottom:12px;line-height:1.6"></div>
+  <button onclick="document.getElementById('msgOverlay').classList.remove('show')" style="min-width:60px">OK</button>
+</div>
+
+<script>
+const BASE_KEY = 'ords_base';
+function getBase() { return localStorage.getItem(BASE_KEY); }
+function saveOrds() {
+  const v = document.getElementById('ordsInput').value.trim().replace(/\/$/,'');
+  if (!v) return;
+  localStorage.setItem(BASE_KEY, v);
+  document.getElementById('configBanner').style.display = 'none';
+  loadPending();
+}
+function showMsg(title, body) {
+  document.getElementById('msgTitle').textContent = title;
+  document.getElementById('msgBody').innerHTML = body;
+  document.getElementById('msgOverlay').classList.add('show');
+}
+
+async function loadPending() {
+  const base = getBase();
+  if (!base) { document.getElementById('configBanner').style.display = 'block'; return; }
+
+  document.getElementById('spinner').classList.add('show');
+  document.getElementById('statusText').textContent = 'Querying GROUP1_ACCOUNTREQUEST...';
+
+  try {
+    const res = await fetch(`${base}/pending/`, { headers: { 'Accept': 'application/json' } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const rows = data.items || [];
+    renderTable(rows);
+    document.getElementById('liveCount').textContent = rows.length + ' PENDING';
+    document.getElementById('statusText').textContent =
+      rows.length === 0
+        ? 'No pending requests — all requests processed'
+        : rows.length + ' pending request(s) — live from formsproto';
+  } catch(e) {
+    document.getElementById('tableWrap').innerHTML =
+      '<div class="empty-state" style="color:#a00">CORS or network error: ' + e.message +
+      '<br>Serve via <code>python3 -m http.server 8080</code> in the apex/ directory.</div>';
+    document.getElementById('statusText').textContent = 'Error loading data';
+  }
+  document.getElementById('spinner').classList.remove('show');
+}
+
+function renderTable(rows) {
+  const wrap = document.getElementById('tableWrap');
+  if (rows.length === 0) {
+    wrap.innerHTML = '<div class="empty-state">No pending requests (Status=\'ENTERED\') in GROUP1_ACCOUNTREQUEST</div>';
+    return;
+  }
+  const cols = [
+    ['requestid','Req ID'],['branch','Branch'],['accounttype','Acct Type'],
+    ['firstname','First Name'],['lastname','Last Name'],
+    ['dob','DOB'],['workphone','Work Ph'],['email','Email'],
+    ['address','Address'],['state','State'],['zip','ZIP']
+  ];
+  let html = '<table><thead><tr>';
+  cols.forEach(([,label]) => { html += `<th>${label}</th>`; });
+  html += '<th style="min-width:160px">Actions</th></tr></thead><tbody>';
+
+  rows.forEach((r,i) => {
+    const rid = r.requestid || r.REQUESTID;
+    html += `<tr id="row-${rid}" onclick="selectRow(${i})">`;
+    cols.forEach(([key]) => {
+      const v = r[key] || r[key.toUpperCase()] || '';
+      html += `<td>${v}</td>`;
+    });
+    html += `<td class="action-cell">
+      <button class="approve-btn" id="app-${rid}" onclick="act(event,${rid},'approve')">APPROVE</button>
+      <button class="reject-btn"  id="rej-${rid}" onclick="act(event,${rid},'reject')">REJECT</button>
+    </td></tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function selectRow(i) {
+  document.querySelectorAll('tbody tr').forEach((r,j) => {
+    r.classList.toggle('selected', i===j);
+  });
+}
+
+async function act(e, rid, action) {
+  e.stopPropagation();
+  const base = getBase();
+  if (!base) return;
+
+  const row = document.getElementById('row-' + rid);
+  const appBtn = document.getElementById('app-' + rid);
+  const rejBtn = document.getElementById('rej-' + rid);
+  appBtn.disabled = true; rejBtn.disabled = true;
+  row.classList.add('processing');
+  document.getElementById('statusText').textContent = (action==='approve' ? 'Approving' : 'Rejecting') + ' Request ID ' + rid + '...';
+
+  try {
+    const res = await fetch(`${base}/${action}/${rid}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: '{}'
+    });
+    const data = await res.json();
+    if (data.ok) {
+      row.classList.remove('processing');
+      row.classList.add(action === 'approve' ? 'done-approved' : 'done-rejected');
+      // Disable both buttons permanently for this row
+      appBtn.textContent = action === 'approve' ? '✓ APPROVED' : '—';
+      rejBtn.textContent = action === 'reject'  ? '✗ REJECTED' : '—';
+      if (action === 'approve') {
+        showMsg('APPROVAL COMPLETE',
+          'Request <strong>' + rid + '</strong> has been approved.<br>' +
+          'Account number generated via:<br>' +
+          '<code style="font-size:10px">AccountType(2) || FirstName(3) || lpad(seq,5,\'0\')</code><br>' +
+          'New record INSERTed into GRP1_REGISTEREDINFO with password11=\'0000\'.<br>' +
+          '<em>Use Check Status page to verify the account number.</em>');
+      } else {
+        showMsg('REJECTION COMPLETE',
+          'Request <strong>' + rid + '</strong> status set to REJECTED in GROUP1_ACCOUNTREQUEST.');
+      }
+      document.getElementById('statusText').textContent =
+        (action==='approve'?'Approved':'Rejected') + ' Request ID ' + rid + ' — live DB updated';
+    } else {
+      row.classList.remove('processing');
+      appBtn.disabled = false; rejBtn.disabled = false;
+      showMsg('DB ERROR', 'Error from pkg_ob_managerapproval: ' + (data.error || 'Unknown'));
+      document.getElementById('statusText').textContent = 'Error — see message';
+    }
+  } catch(e2) {
+    row.classList.remove('processing');
+    appBtn.disabled = false; rejBtn.disabled = false;
+    showMsg('NETWORK ERROR', e2.message + '<br>Serve via <code>python3 -m http.server 8080</code>');
+    document.getElementById('statusText').textContent = 'Network error';
+  }
+}
+
+function init() {
+  if (!getBase()) {
+    document.getElementById('configBanner').style.display = 'block';
+  } else {
+    loadPending(); // auto-load on open if ORDS is configured
+  }
+}
+init();
+</script>
+</body>
+</html>

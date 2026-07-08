@@ -1,3 +1,7 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <title>Oracle Forms Modernization Pipeline</title>
 <meta name="description" content="AI-assisted Oracle Forms → APEX analysis dashboard: 12 modules analyzed, 8 packages generated, 5 schema bugs caught.">
 
@@ -14,13 +18,46 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: Arial, Helvetica, sans-serif; background: var(--w); color: var(--k); line-height: 1.4; }
 
-/* HEADER */
-.header { background: var(--k); color: var(--y); padding: 48px 40px 40px; border-bottom: 4px solid var(--y); }
+/* HERO */
+.header { background: var(--k); color: var(--y); padding: 40px 40px 36px; border-bottom: 4px solid var(--y); }
 .header-eyebrow { font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 3px; color: #777; margin-bottom: 14px; }
 .header-title { font-family: 'Arial Black', Arial, sans-serif; font-size: clamp(36px, 6vw, 60px); font-weight: 900; line-height: 1; color: var(--y); }
 .header-arrow { color: var(--p); }
 .header-sub { margin-top: 18px; font-family: 'Courier New', monospace; font-size: 12px; color: #777; letter-spacing: 1px; }
 .header-tagline { margin-top: 10px; color: #999; font-size: 13px; max-width: 640px; }
+
+/* FLOW (how it works) */
+.flow-track { display: flex; align-items: stretch; gap: 0; margin-top: 8px; }
+.flow-step { flex: 1; background: var(--w); border: var(--border); box-shadow: var(--sh); padding: 22px 20px; display: flex; flex-direction: column; gap: 10px; }
+.flow-step.flow-final { border-color: var(--b); box-shadow: 5px 5px 0 var(--b); }
+.flow-step-num { font-family: 'Arial Black', Arial, sans-serif; font-size: 34px; font-weight: 900; color: #e8e8e8; line-height: 1; }
+.flow-final .flow-step-num { color: #cfe0ff; }
+.flow-step-tag { font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; font-weight: 700; padding: 3px 8px; border: 1.5px solid var(--k); display: inline-block; width: fit-content; }
+.flow-final .flow-step-tag { border-color: var(--b); color: var(--b); }
+.flow-step-title { font-family: 'Arial Black', Arial, sans-serif; font-size: 14px; font-weight: 900; text-wrap: balance; }
+.flow-step-desc { font-size: 12px; color: #444; line-height: 1.5; }
+.flow-step-link { margin-top: auto; padding-top: 6px; font-family: 'Courier New', monospace; font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; color: var(--p); text-decoration: none; }
+.flow-step-link:hover { text-decoration: underline; }
+.flow-arrow { display: flex; align-items: center; justify-content: center; width: 26px; flex-shrink: 0; font-size: 20px; font-weight: 900; color: var(--p); }
+
+/* DEMO / TRY IT */
+.demo-config { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--y); border: var(--border); padding: 12px 16px; margin-bottom: 28px; font-family: 'Courier New', monospace; font-size: 12px; box-shadow: var(--sh); }
+.demo-config input[type=text] { font-family: 'Courier New', monospace; font-size: 12px; padding: 6px 8px; border: 2px solid var(--k); width: 380px; max-width: 100%; background: var(--w); }
+.demo-config button { font-family: 'Courier New', monospace; font-size: 11px; font-weight: 700; background: var(--k); color: var(--y); border: 2px solid var(--k); padding: 7px 16px; cursor: pointer; }
+.demo-config button:hover { opacity: 0.85; }
+.demo-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.demo-col-label { font-family: 'Arial Black', Arial, sans-serif; font-size: 14px; font-weight: 900; letter-spacing: 1px; padding-bottom: 8px; margin-bottom: 6px; border-bottom: 3px solid; }
+.demo-col-label.sim { color: #777; border-color: #999; }
+.demo-col-label.live { color: var(--b); border-color: var(--b); }
+.demo-col-sub { font-family: 'Courier New', monospace; font-size: 10px; color: #999; margin-bottom: 14px; }
+.demo-link { display: block; text-decoration: none; border: 2.5px solid; padding: 14px 16px; margin-bottom: 10px; background: var(--w); transition: transform 0.06s ease; }
+.demo-link:hover { transform: translate(-3px, -3px); }
+.demo-link.sim { border-color: #aaa; box-shadow: 4px 4px 0 #aaa; }
+.demo-link.live { border-color: var(--b); box-shadow: 4px 4px 0 var(--b); }
+.demo-link-title { font-family: 'Arial Black', Arial, sans-serif; font-size: 14px; font-weight: 900; margin-bottom: 4px; }
+.demo-link.sim .demo-link-title { color: #444; }
+.demo-link.live .demo-link-title { color: var(--b); }
+.demo-link-sub { font-family: 'Courier New', monospace; font-size: 10px; color: #888; letter-spacing: 0.3px; }
 
 /* STATS ROW */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: var(--border); }
@@ -91,13 +128,6 @@ body { font-family: Arial, Helvetica, sans-serif; background: var(--w); color: v
 .finding-fix { margin-top: 12px; font-family: 'Courier New', monospace; font-size: 11px; color: #555; border-top: 1px solid #ddd; padding-top: 10px; line-height: 1.5; }
 .inline-code { font-family: 'Courier New', monospace; font-size: 12px; padding: 1px 5px; }
 
-/* LIMITS */
-.limits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-.limit-item { border: var(--border); box-shadow: var(--sh); padding: 22px; display: flex; gap: 18px; align-items: flex-start; }
-.limit-num { font-family: 'Arial Black', Arial, sans-serif; font-size: 40px; font-weight: 900; line-height: 1; color: #e0e0e0; flex-shrink: 0; font-variant-numeric: tabular-nums; }
-.limit-title { font-family: 'Courier New', monospace; font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 7px; }
-.limit-desc { font-size: 13px; color: #444; line-height: 1.55; }
-
 /* MODULE GRID */
 .modules-outer { border-top: var(--border); border-left: var(--border); }
 .modules-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
@@ -135,21 +165,75 @@ body { font-family: Arial, Helvetica, sans-serif; background: var(--w); color: v
 /* RESPONSIVE */
 @media (max-width: 860px) {
   .stats-row { grid-template-columns: repeat(2, 1fr); }
-  .charts-grid, .findings-grid, .limits-grid, .modules-grid { grid-template-columns: 1fr; }
+  .charts-grid, .findings-grid, .modules-grid, .demo-columns { grid-template-columns: 1fr; }
   .section, .header { padding: 32px 20px; }
+  .flow-track { flex-direction: column; }
+  .flow-arrow { width: auto; height: 22px; transform: rotate(90deg); }
 }
 </style>
+</head>
+<body>
 
-<!-- HEADER -->
+<!-- HERO -->
 <header class="header">
-  <div class="header-eyebrow">AI-ASSISTED LEGACY MODERNIZATION · GALENT · 2026-07-07</div>
+  <div class="header-eyebrow">AI-ASSISTED LEGACY MODERNIZATION · GALENT · 2026-07-08</div>
   <div class="header-title">ORACLE FORMS <span class="header-arrow">→</span> APEX</div>
   <div class="header-sub">MODULE: online_banking · formsproto Oracle Autonomous DB 23ai</div>
-  <div class="header-tagline">AI parsed, cross-referenced, and extracted every module. Below is the full accounting of what it found.</div>
+  <div class="header-tagline">One AI agent, one pass: parse the legacy app, cross-reference the live schema, extract the logic, stand up a real API, and hand it to any frontend.</div>
 </header>
 
+<!-- HOW IT WORKS -->
+<section class="section section-alt">
+  <div class="section-eyebrow">THE PIPELINE</div>
+  <div class="section-title">How an AI agent takes this from .fmb file to live app</div>
+  <div class="flow-track">
+    <div class="flow-step">
+      <span class="flow-step-num">01</span>
+      <span class="flow-step-tag">.FMB XML · .SQL</span>
+      <div class="flow-step-title">Drop the legacy files</div>
+      <div class="flow-step-desc">Point the agent at the exported Forms XML and the target schema's DDL. Nothing to upload; it reads local files directly.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-step-num">02</span>
+      <span class="flow-step-tag">MCP · SQLcl</span>
+      <div class="flow-step-title">Agent analyzes &amp; cross-references</div>
+      <div class="flow-step-desc">Parses every trigger and block, then queries the live DB over MCP to catch schema mismatches before they cause a runtime failure.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-step-num">03</span>
+      <span class="flow-step-tag">GATE</span>
+      <div class="flow-step-title">Analysis report generated</div>
+      <div class="flow-step-desc">The agent hands back a full report: modules found, logic extracted, schema bugs, security issues. Migration doesn't proceed until this is reviewed.</div>
+      <a href="#report" class="flow-step-link">↓ VIEW THE REPORT</a>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-step-num">04</span>
+      <span class="flow-step-tag">PL/SQL → ORDS</span>
+      <div class="flow-step-title">Extract logic, expose as API</div>
+      <div class="flow-step-desc">Once approved, business logic becomes PL/SQL packages, compiled into the DB. Agent then defines ORDS REST endpoints over MCP, with no manual console clicks.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-step-num">05</span>
+      <span class="flow-step-tag">ANY STACK</span>
+      <div class="flow-step-title">Build the frontend</div>
+      <div class="flow-step-desc">Wire any UI to those same REST endpoints: hand-rolled HTML/JS as shown here, Oracle APEX Builder, React, whatever the team already knows.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step flow-final">
+      <span class="flow-step-num">06</span>
+      <span class="flow-step-tag">LIVE DEMO</span>
+      <div class="flow-step-title">Voilà, a working app</div>
+      <div class="flow-step-desc">End-to-end, clickable, backed by the real database. Try both the legacy simulation and the live rebuild further down.</div>
+    </div>
+  </div>
+</section>
+
 <!-- STATS -->
-<div class="stats-row">
+<div class="stats-row" id="report">
   <div class="stat-card card-y">
     <span class="stat-num">12</span>
     <span class="stat-label">MODULES ANALYZED</span>
@@ -174,8 +258,8 @@ body { font-family: Arial, Helvetica, sans-serif; background: var(--w); color: v
 
 <!-- CHARTS -->
 <section class="section">
-  <div class="section-eyebrow">PIPELINE METRICS</div>
-  <div class="section-title">What the pipeline found across 12 modules</div>
+  <div class="section-eyebrow">ANALYSIS REPORT · STEP 03 OUTPUT</div>
+  <div class="section-title">What the agent found across 12 modules</div>
   <div class="charts-grid">
 
     <div class="chart-box">
@@ -221,12 +305,12 @@ body { font-family: Arial, Helvetica, sans-serif; background: var(--w); color: v
           </div>
           <div class="legend-item">
             <div class="legend-swatch" style="background:var(--b)"></div>
-            <span>3 stubs — pure navigation</span>
+            <span>3 stubs (pure navigation)</span>
             <span class="legend-pct">25%</span>
           </div>
           <div class="legend-item">
             <div class="legend-swatch" style="background:var(--p)"></div>
-            <span>1 flagged — security issue</span>
+            <span>1 flagged (security issue)</span>
             <span class="legend-pct">8%</span>
           </div>
         </div>
@@ -263,7 +347,7 @@ body { font-family: Arial, Helvetica, sans-serif; background: var(--w); color: v
           <td>FK target</td>
           <td><code class="sc">REFERENCES&nbsp;GRP1_ACCOUNTREQUEST</code></td>
           <td>Table is <code class="sc">GROUP1_ACCOUNTREQUEST</code></td>
-          <td>Schema DDL fails — FK target doesn't exist. Tables never created.</td>
+          <td>Schema DDL fails: FK target doesn't exist. Tables never created.</td>
         </tr>
         <tr>
           <td>3</td>
@@ -297,7 +381,7 @@ body { font-family: Arial, Helvetica, sans-serif; background: var(--w); color: v
 <!-- SECURITY FINDINGS -->
 <section class="section">
   <div class="section-eyebrow">SECURITY AUDIT</div>
-  <div class="section-title">Issues a code review would miss — found in trigger logic</div>
+  <div class="section-title">Issues a code review would miss, found in trigger logic</div>
   <div class="findings-grid">
 
     <div class="finding-card">
@@ -308,7 +392,7 @@ body { font-family: Arial, Helvetica, sans-serif; background: var(--w); color: v
         <div class="finding-desc">
           Password <span class="inline-code" style="background:#ffe8ee">"ADMIN123"</span> is embedded plaintext in a WHEN-BUTTON-PRESSED trigger inside the compiled .fmb binary. Any developer who opens Forms Builder extracts it immediately.
         </div>
-        <div class="finding-fix">FIX → Replace entirely with APEX workspace authentication. Apply MANAGER role authorization scheme to approval page. Do not move this credential to PL/SQL — that's not an improvement.</div>
+        <div class="finding-fix">FIX → Replace entirely with APEX workspace authentication. Apply MANAGER role authorization scheme to approval page. Do not move this credential to PL/SQL; that's not an improvement.</div>
       </div>
     </div>
 
@@ -339,50 +423,63 @@ body { font-family: Arial, Helvetica, sans-serif; background: var(--w); color: v
   </div>
 </section>
 
-<!-- AUTOMATION LIMITS -->
-<section class="section section-grey">
-  <div class="section-eyebrow">HONEST LIMITS</div>
-  <div class="section-title">What AI could not automate — requires a developer</div>
-  <div class="limits-grid">
-    <div class="limit-item">
-      <span class="limit-num">01</span>
-      <div>
-        <div class="limit-title">INTER-FORM NAVIGATION</div>
-        <div class="limit-desc">CALL_FORM chains define the app's full navigation graph. The map was produced through manual analysis. APEX page numbering, branching, and session state strategy requires a human architect to design.</div>
-      </div>
-    </div>
-    <div class="limit-item">
-      <span class="limit-num">02</span>
-      <div>
-        <div class="limit-title">FORMS RUNTIME STATE</div>
-        <div class="limit-desc">Triggers using <span style="font-family:'Courier New',monospace;font-size:11px">name_in('system.mode')</span>, GET_ITEM_PROPERTY, and implicit block cursors are wired to the Forms runtime engine — no APEX equivalent exists.</div>
-      </div>
-    </div>
-    <div class="limit-item">
-      <span class="limit-num">03</span>
-      <div>
-        <div class="limit-title">MULTI-RECORD BLOCK UX</div>
-        <div class="limit-desc">G1_MANAGERAPPROVAL's scrollable 5-record block with per-row action buttons has no direct APEX equivalent. APEX Interactive Grid differs in behaviour; row-level Approve/Reject requires custom column links built manually.</div>
-      </div>
-    </div>
-    <div class="limit-item">
-      <span class="limit-num">04</span>
-      <div>
-        <div class="limit-title">APEX PAGE CONSTRUCTION</div>
-        <div class="limit-desc">The 8 packages are the logic layer, not a finished migration. APEX pages must still be built in APEX Builder or generated as export SQL. AI does the archaeology and scaffolding — a developer builds the UI.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- MODULE GRID -->
 <section class="section" style="padding-bottom: 0; border-bottom: none;">
   <div class="section-eyebrow">FULL MODULE BREAKDOWN</div>
-  <div class="section-title" style="margin-bottom:16px">All 12 modules — click to expand extracted logic</div>
+  <div class="section-title" style="margin-bottom:16px">All 12 modules: click to expand extracted logic</div>
 </section>
 <div class="modules-outer">
   <div class="modules-grid" id="moduleGrid"></div>
 </div>
+
+<!-- TRY IT LIVE -->
+<section class="section" style="border-top: var(--border)">
+  <div class="section-eyebrow">REPORT REVIEWED → MIGRATION COMPLETE</div>
+  <div class="section-title">Try the legacy simulation side by side with the live rebuild</div>
+
+  <div class="demo-config">
+    <span style="font-weight:700">⚙ ORDS URL (for the live pages)</span>
+    <input type="text" id="navOrdsInput" placeholder="https://YOUR_DB.adb.REGION.oraclecloudapps.com/ords/admin/ob">
+    <button onclick="saveNavOrds()">SAVE TO BROWSER</button>
+    <span id="navOrdsStatus" style="font-size:10px;color:#444"></span>
+  </div>
+
+  <div class="demo-columns">
+    <div>
+      <div class="demo-col-label sim">[ LEGACY UI SIMULATION ]</div>
+      <div class="demo-col-sub">HARDCODED · NO NETWORK CALLS · JS-only replica</div>
+      <a href="../legacy_replica/index.html" target="_blank" class="demo-link sim">
+        <div class="demo-link-title">Account Opening</div>
+        <div class="demo-link-sub">SIMULATED · G1_ACCOUNTOPENING · see Tab 1</div>
+      </a>
+      <a href="../legacy_replica/index.html" target="_blank" class="demo-link sim">
+        <div class="demo-link-title">Manager Approval</div>
+        <div class="demo-link-sub">SIMULATED · G1_MANAGERAPPROVAL · see Tab 2</div>
+      </a>
+      <a href="../legacy_replica/index.html" target="_blank" class="demo-link sim">
+        <div class="demo-link-title">Check Status</div>
+        <div class="demo-link-sub">SIMULATED · G1_CHECKSTATUS1 · see Tab 3</div>
+      </a>
+    </div>
+
+    <div>
+      <div class="demo-col-label live">● LIVE · ORDS → formsproto</div>
+      <div class="demo-col-sub">REAL DB CALLS · Oracle Autonomous DB 23ai · pkg_ob_* packages</div>
+      <a href="../live/account_opening.html" target="_blank" class="demo-link live">
+        <div class="demo-link-title">Account Opening</div>
+        <div class="demo-link-sub">POST /ob/requests/ · pkg_ob_accountopening · INSERT GROUP1_ACCOUNTREQUEST</div>
+      </a>
+      <a href="../live/manager_approval.html" target="_blank" class="demo-link live">
+        <div class="demo-link-title">Manager Approval</div>
+        <div class="demo-link-sub">GET /ob/pending/ + POST /ob/approve|reject/:id · pkg_ob_managerapproval</div>
+      </a>
+      <a href="../live/check_status.html" target="_blank" class="demo-link live">
+        <div class="demo-link-title">Check Status</div>
+        <div class="demo-link-sub">GET /ob/status/:id · pkg_ob_checkstatus · GROUP1_ACCOUNTREQUEST + GRP1_REGISTEREDINFO</div>
+      </a>
+    </div>
+  </div>
+</section>
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -398,40 +495,40 @@ const M = [
     logic:[], tables:[], note:'No DB interaction. APEX: static page with 5 button redirects. No PL/SQL needed.' },
   { file:'G1_CUSTOMERDETAIL', alias:null, purpose:'Read-only manager view of a customer application. Launched from approval screen via parameter P5=RequestId.', complexity:'Trivial', pkgStatus:'none',
     logic:['DB block on GROUP1_ACCOUNTREQUEST filtered by param P5 (RequestId)','Manually populates all fields on WHEN-NEW-FORM-INSTANCE','BACK button returns to MANAGERAPPROVAL passing P1=RequestId'],
-    tables:['GROUP1_ACCOUNTREQUEST'], note:'Single SELECT — no logic to extract. APEX: read-only form sourced from GROUP1_ACCOUNTREQUEST.' },
+    tables:['GROUP1_ACCOUNTREQUEST'], note:'Single SELECT, no logic to extract. APEX: read-only form sourced from GROUP1_ACCOUNTREQUEST.' },
   { file:'G1_MANAGERLOGINPAGE', alias:null, purpose:'Manager authentication gate before the approval workflow.', complexity:'Low', pkgStatus:'flagged',
-    logic:["IF :USERNAME='MANAGER' AND :PASSWORD='ADMIN123' THEN CALL_FORM(approval)","No DB lookup — credentials entirely hardcoded in trigger body"],
+    logic:["IF :USERNAME='MANAGER' AND :PASSWORD='ADMIN123' THEN CALL_FORM(approval)","No DB lookup; credentials entirely hardcoded in trigger body"],
     tables:[], note:'⚠ Package intentionally NOT generated. Moving hardcoded creds to PL/SQL is not an improvement. Must be replaced with APEX role-based auth.' },
   { file:'G1_LOGIN', alias:null, purpose:'Customer login. Validates account number + password against DB, then navigates to transaction entry.', complexity:'Low', pkg:'pkg_ob_login', pkgStatus:'extracted',
     logic:['SELECT password11 FROM GRP1_REGISTEREDINFO WHERE Account_Number=:T1','Compare entered password → match/reject','Pass account number as CALL_FORM parameter P1 to G1_TRANSACTIONENTRY'],
     tables:['GRP1_REGISTEREDINFO'], note:'APEX: authenticate_customer() called from APEX login page. CALL_FORM param → APEX session state item.' },
   { file:'G1_CHECKSTATUS', alias:'G1_CHECKSTATUS1', purpose:'Customer self-service: check account application status by Request ID.', complexity:'Low', pkg:'pkg_ob_checkstatus', pkgStatus:'extracted',
     logic:['SELECT Status FROM GROUP1_ACCOUNTREQUEST WHERE RequestId=:T1','If APPROVED → also SELECT Account_Number FROM GRP1_REGISTEREDINFO','Three-branch conditional message: APPROVED / ENTERED / REJECTED'],
-    tables:['GROUP1_ACCOUNTREQUEST','GRP1_REGISTEREDINFO'], note:'File G1_CHECKSTATUS_fmb.xml contains FormModule G1_CHECKSTATUS1 — naming mismatch flagged.' },
+    tables:['GROUP1_ACCOUNTREQUEST','GRP1_REGISTEREDINFO'], note:'File G1_CHECKSTATUS_fmb.xml contains FormModule G1_CHECKSTATUS1; naming mismatch flagged.' },
   { file:'G1_TRANSACTIONDETAILS', alias:null, purpose:'Date-range transaction history report for a customer account.', complexity:'Low', pkg:'pkg_ob_transactiondetails', pkgStatus:'extracted',
     logic:['Validate: to_date ≤ SYSDATE','Validate: from_date ≤ to_date','WHERE Account_Number=P1 AND TransactionDate BETWEEN from_date AND to_date','APEX: expose as Interactive Report REF CURSOR source'],
     tables:['GRP1_TRANSACTIONINFO'], note:'Account number passed as CALL_FORM parameter P1 from login flow.' },
   { file:'G1_ACCOUNTOPENING', alias:null, purpose:'New account application. Collects full personal details, validates, and submits request.', complexity:'Medium', pkg:'pkg_ob_accountopening', pkgStatus:'extracted',
-    logic:['Auto-generate RequestId: MAX(RequestId)+10 on form open (concurrency risk — use sequence in APEX)','Validate phone: LENGTH(phone) = 10','Validate email: value LIKE \'%@%.com\'','INSERT INTO GROUP1_ACCOUNTREQUEST on SUBMIT'],
+    logic:['Auto-generate RequestId: MAX(RequestId)+10 on form open (concurrency risk, use sequence in APEX)','Validate phone: LENGTH(phone) = 10','Validate email: value LIKE \'%@%.com\'','INSERT INTO GROUP1_ACCOUNTREQUEST on SUBMIT'],
     tables:['GROUP1_ACCOUNTREQUEST'], note:'Email validation is minimal (no regex). MAX+10 ID is race-prone. APEX rebuild should use Oracle sequences.' },
   { file:'G1_ONLINEREGISTRATION', alias:null, purpose:'Online banking enrollment. Sets a login password for an already-approved account.', complexity:'Medium', pkg:'pkg_ob_onlineregistration', pkgStatus:'extracted',
-    logic:['Check Online_registration ≠ \'Y\' — prevents double enrollment','Validate password length ≥ 6 characters','Validate password = confirm_password match','UPDATE GRP1_REGISTEREDINFO SET Online_registration=\'Y\', password11=?'],
-    tables:['GRP1_REGISTEREDINFO'], note:'Passwords stored plaintext — flag for APEX rebuild with APEX_UTIL.GET_HASH.' },
+    logic:['Check Online_registration ≠ \'Y\' (prevents double enrollment)','Validate password length ≥ 6 characters','Validate password = confirm_password match','UPDATE GRP1_REGISTEREDINFO SET Online_registration=\'Y\', password11=?'],
+    tables:['GRP1_REGISTEREDINFO'], note:'Passwords stored plaintext; flag for APEX rebuild with APEX_UTIL.GET_HASH.' },
   { file:'G1_TRANSACTIONENTRY', alias:null, purpose:'Submit a bank transaction (debit, credit, or cheque payment).', complexity:'Medium', pkg:'pkg_ob_transactionentry', pkgStatus:'extracted',
-    logic:['Validate amount > 0 AND amount ≤ 9,999,999 (explicit 10-lakh cap)','Validate LENGTH(cheque_no) = 6 exactly','Auto-increment TransactionId: MAX+1 (race-prone — use sequence)','INSERT INTO GRP1_TRANSACTIONINFO'],
+    logic:['Validate amount > 0 AND amount ≤ 9,999,999 (explicit 10-lakh cap)','Validate LENGTH(cheque_no) = 6 exactly','Auto-increment TransactionId: MAX+1 (race-prone, use sequence)','INSERT INTO GRP1_TRANSACTIONINFO'],
     tables:['GRP1_TRANSACTIONINFO'], note:'Account number received as CALL_FORM parameter P1 from login flow → APEX session state.' },
   { file:'G1_INTERESTCALCULATOR', alias:'G1_SIMPLEINTEREST', purpose:'Simple interest calculator for 7 loan product types. Hardcoded rate table. No DB interaction.', complexity:'Medium', pkg:'pkg_ob_interestcalculator', pkgStatus:'extracted',
-    logic:['7 types: HOME(8%), EDUCATION(6%), AGRICULTURE(6%), TWO WHEELER(11%), FOUR WHEELER(12%), GOLD(10%), PERSONAL(11%)','Per-type eligible amount range validated on entry','Formula: SI = (P × R × T) / 100 — extracted verbatim'],
-    tables:[], note:'FormModule name G1_SIMPLEINTEREST differs from file name G1_INTERESTCALCULATOR — would cause runtime .fmx load failure. Rates should move to a DB table in APEX rebuild.' },
+    logic:['7 types: HOME(8%), EDUCATION(6%), AGRICULTURE(6%), TWO WHEELER(11%), FOUR WHEELER(12%), GOLD(10%), PERSONAL(11%)','Per-type eligible amount range validated on entry','Formula: SI = (P × R × T) / 100, extracted verbatim'],
+    tables:[], note:'FormModule name G1_SIMPLEINTEREST differs from file name G1_INTERESTCALCULATOR, which would cause runtime .fmx load failure. Rates should move to a DB table in APEX rebuild.' },
   { file:'G1_MANAGERAPPROVAL', alias:null, purpose:'Manager workflow: view all ENTERED requests, approve (generating account number) or reject each.', complexity:'High', pkg:'pkg_ob_managerapproval', pkgStatus:'extracted',
-    logic:['DB block: GROUP1_ACCOUNTREQUEST WHERE Status=\'ENTERED\', 5-record scrollable view','APPROVE: UPDATE status → generate acct# → INSERT into GRP1_REGISTEREDINFO','Account# algorithm: AccountType(2) ‖ FirstName(3) ‖ lpad(MAX_seq+1,5,\'0\') — e.g. CUJoh00001','REJECT: UPDATE Status=\'REJECTED\'','DETAILS: navigate to G1_CUSTOMERDETAIL passing P5=RequestId'],
-    tables:['GROUP1_ACCOUNTREQUEST','GRP1_REGISTEREDINFO'], note:'Most complex module. Account# generation has collision risk under concurrent web sessions. Replace MAX() with a sequence in APEX. Default password \'0000\' inserted on approval — security issue.' }
+    logic:['DB block: GROUP1_ACCOUNTREQUEST WHERE Status=\'ENTERED\', 5-record scrollable view','APPROVE: UPDATE status → generate acct# → INSERT into GRP1_REGISTEREDINFO','Account# algorithm: AccountType(2) ‖ FirstName(3) ‖ lpad(MAX_seq+1,5,\'0\'), e.g. CUJoh00001','REJECT: UPDATE Status=\'REJECTED\'','DETAILS: navigate to G1_CUSTOMERDETAIL passing P5=RequestId'],
+    tables:['GROUP1_ACCOUNTREQUEST','GRP1_REGISTEREDINFO'], note:'Most complex module. Account# generation has collision risk under concurrent web sessions. Replace MAX() with a sequence in APEX. Default password \'0000\' inserted on approval; a security issue.' }
 ];
 
 const CLS = { Trivial:'c-trivial', Low:'c-low', Medium:'c-medium', High:'c-high' };
 const PKG = {
   extracted: m => `<span class="pkg-extracted">${m.pkg}</span>`,
-  none:      () => `<span class="pkg-none">— no package · no extractable logic</span>`,
+  none:      () => `<span class="pkg-none">no package · no extractable logic</span>`,
   flagged:   () => `<span class="pkg-flagged">⚠ not generated · see security findings</span>`
 };
 
@@ -473,4 +570,20 @@ function toggle(i) {
   const open = d.classList.toggle('open');
   b.textContent = open ? '−' : '+';
 }
+
+function saveNavOrds() {
+  const v = document.getElementById('navOrdsInput').value.trim().replace(/\/$/,'');
+  if (!v) return;
+  localStorage.setItem('ords_base', v);
+  document.getElementById('navOrdsStatus').textContent = '✓ Saved. Live pages will use this URL';
+}
+(function initNav() {
+  const existing = localStorage.getItem('ords_base');
+  if (existing) {
+    document.getElementById('navOrdsInput').value = existing;
+    document.getElementById('navOrdsStatus').textContent = '✓ URL already configured';
+  }
+})();
 </script>
+</body>
+</html>

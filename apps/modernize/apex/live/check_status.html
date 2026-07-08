@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>G1_CHECKSTATUS1 — Live ORDS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,'MS Sans Serif',Arial,sans-serif;font-size:11px;background:#008080;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px;gap:8px}
+.config-banner{width:100%;max-width:700px;background:#f5e642;border:2px solid #000;padding:8px 12px;font-family:'Courier New',monospace;font-size:11px}
+.config-banner input{font-size:11px;padding:2px 4px;width:360px;margin:0 6px}
+.live-badge{width:100%;max-width:700px;background:#1a6eff;color:#fff;border:2px solid #000;padding:5px 12px;font-family:'Courier New',monospace;font-size:10px;letter-spacing:2px;font-weight:700}
+.forms-window{width:100%;max-width:700px;border:2px solid;border-color:#dfdfdf #808080 #808080 #dfdfdf;box-shadow:2px 2px 0 #000;background:#d4d0c8}
+.title-bar{background:linear-gradient(to right,#000082,#1084d0);color:white;padding:3px 4px;display:flex;align-items:center;justify-content:space-between}
+.title-bar-left{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700}
+.title-icon{width:15px;height:15px;background:#ff8;border:1px solid #c40;font-size:9px;display:flex;align-items:center;justify-content:center;color:#c40;font-weight:900}
+.title-btns{display:flex;gap:2px}
+.tbtn{width:16px;height:14px;background:#d4d0c8;border:1px solid;border-color:#fff #808080 #808080 #fff;font-size:9px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.menu-bar{background:#d4d0c8;border-bottom:1px solid #808080;padding:2px 4px;display:flex;gap:0}
+.menu-item{padding:1px 8px;cursor:pointer}
+.menu-item:hover{background:#000080;color:white}
+.form-canvas{background:#d4d0c8;padding:12px 16px 16px}
+.form-title-block{background:#d4d0c8;border:1px solid;border-color:#808080 #fff #fff #808080;padding:4px 10px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.form-title-text{font-size:12px;font-weight:700;color:#000080}
+.form-badge{font-family:'Courier New',monospace;font-size:9px;background:#1a6eff;color:#fff;padding:2px 6px;font-weight:700}
+.raised-panel{border:1px solid;border-color:#dfdfdf #808080 #808080 #dfdfdf;padding:8px 10px;margin-bottom:8px}
+.raised-panel-title{font-size:11px;font-weight:700;margin-bottom:6px;color:#000080}
+.field-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.field-group{display:flex;align-items:center;gap:4px}
+.field-label{font-size:11px;color:#000;white-space:nowrap}
+input[type=text]{font-family:Tahoma,Arial,sans-serif;font-size:11px;background:white;border-top:1px solid #808080;border-left:1px solid #808080;border-bottom:1px solid #dfdfdf;border-right:1px solid #dfdfdf;outline:none;padding:1px 3px;height:19px}
+input[type=text]:focus{border-color:#000}
+button{font-family:Tahoma,Arial,sans-serif;font-size:11px;background:#d4d0c8;border:1px solid;border-color:#dfdfdf #808080 #808080 #dfdfdf;padding:2px 14px;min-width:70px;cursor:pointer;height:22px}
+button:active{border-color:#808080 #dfdfdf #dfdfdf #808080;padding:3px 13px 1px 15px}
+button.primary{font-weight:700}
+.result-panel{border:1px solid #808080;background:#fff;padding:8px 10px;margin-top:8px;min-height:48px;display:none;font-size:11px}
+.result-panel.show{display:block}
+.r-approved{color:#006600;font-weight:700}
+.r-entered{color:#333}
+.r-rejected{color:#aa0000;font-weight:700}
+.r-error{color:#aa0000}
+.status-bar{background:#d4d0c8;border-top:1px solid #808080;padding:2px 8px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#555}
+.status-item{border:1px solid;border-color:#808080 #dfdfdf #dfdfdf #808080;padding:1px 6px;font-size:10px}
+.spinner{display:none;font-size:10px;color:#888;margin-left:8px}
+.spinner.show{display:inline}
+</style>
+</head>
+<body>
+
+<div class="config-banner" id="configBanner" style="display:none">
+  ⚠ <strong>ORDS URL not configured.</strong>
+  Enter your DB ORDS base URL:
+  <input type="text" id="ordsInput" placeholder="https://YOUR_DB.adb.REGION.oraclecloudapps.com/ords/admin/ob">
+  <button onclick="saveOrds()">Save</button>
+  <div style="margin-top:4px;font-size:10px;color:#555">Find it: OCI Console → your Autonomous DB → Tool Configuration → ORDS URL. Append <code>/admin/ob</code></div>
+</div>
+
+<div class="live-badge">● LIVE — ORDS-BACKED · formsproto Autonomous DB 23ai · pkg_ob_checkstatus.check_request_status</div>
+
+<div class="forms-window">
+  <div class="title-bar">
+    <div class="title-bar-left">
+      <div class="title-icon">F</div>
+      <span>Oracle Forms Runtime - G1_CHECKSTATUS1 [online_banking] [LIVE]</span>
+    </div>
+    <div class="title-btns">
+      <div class="tbtn">_</div><div class="tbtn">□</div><div class="tbtn">✕</div>
+    </div>
+  </div>
+  <div class="menu-bar">
+    <span class="menu-item">File</span><span class="menu-item">Edit</span>
+    <span class="menu-item">Block</span><span class="menu-item">Query</span>
+    <span class="menu-item">Window</span><span class="menu-item">Help</span>
+  </div>
+
+  <div class="form-canvas">
+    <div class="form-title-block">
+      <div class="form-title-text">CHECK APPLICATION STATUS</div>
+      <span class="form-badge">LIVE · ORDS</span>
+    </div>
+
+    <div class="raised-panel">
+      <div class="field-row">
+        <div class="field-group">
+          <span class="field-label">Request ID <span style="color:#a00">*</span></span>
+          <input type="text" id="reqId" style="width:80px" placeholder="e.g. 10"
+            onkeydown="if(event.key==='Enter')checkStatus()">
+        </div>
+        <button class="primary" onclick="checkStatus()">CHECK</button>
+        <span class="spinner" id="spinner">Querying DB...</span>
+      </div>
+    </div>
+
+    <div class="raised-panel result-panel" id="resultPanel">
+      <div class="raised-panel-title">RESULT — live from GROUP1_ACCOUNTREQUEST + GRP1_REGISTEREDINFO</div>
+      <div id="resultMsg" style="line-height:1.8"></div>
+    </div>
+
+    <div style="margin-top:8px;display:flex;gap:6px">
+      <button onclick="document.getElementById('reqId').value='';document.getElementById('resultPanel').classList.remove('show')">CLEAR</button>
+      <button onclick="window.location='../dashboard/index.html'">HOME</button>
+    </div>
+
+    <div style="margin-top:12px;font-size:10px;color:#888;border-top:1px solid #b0b0b0;padding-top:6px">
+      Query: GET /ob/status/:id → SELECT Status, Account_Number FROM GROUP1_ACCOUNTREQUEST LEFT JOIN GRP1_REGISTEREDINFO
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <span id="statusText">Ready</span>
+    <div style="display:flex;gap:6px">
+      <span class="status-item">BLOCK: G1_CHECKSTATUS1</span>
+      <span class="status-item">ORACLE FORMS 10g → ORDS</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE_KEY = 'ords_base';
+
+function getBase() { return localStorage.getItem(BASE_KEY); }
+
+function saveOrds() {
+  const v = document.getElementById('ordsInput').value.trim().replace(/\/$/,'');
+  if (!v) return;
+  localStorage.setItem(BASE_KEY, v);
+  document.getElementById('configBanner').style.display = 'none';
+}
+
+function init() {
+  if (!getBase()) document.getElementById('configBanner').style.display = 'block';
+}
+
+async function checkStatus() {
+  const rid = document.getElementById('reqId').value.trim();
+  if (!rid || isNaN(rid)) { alert('Enter a numeric Request ID'); return; }
+  const base = getBase();
+  if (!base) { document.getElementById('configBanner').style.display = 'block'; return; }
+
+  const spinner = document.getElementById('spinner');
+  const panel   = document.getElementById('resultPanel');
+  const msg     = document.getElementById('resultMsg');
+  document.getElementById('statusText').textContent = 'Querying DB...';
+  spinner.classList.add('show');
+  panel.classList.remove('show');
+
+  try {
+    const res = await fetch(`${base}/status/${rid}`, {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const rows = data.items || [];
+
+    panel.classList.add('show');
+    if (rows.length === 0) {
+      msg.innerHTML = '<span class="r-error">No application found for Request ID: ' + rid + '</span>';
+    } else {
+      const r = rows[0];
+      const status = (r.status || r.STATUS || '').toUpperCase();
+      const acctNum = r.accountnumber || r.ACCOUNTNUMBER || r.account_number || '';
+      const statusMsg = r.statusmessage || r.STATUSMESSAGE || '';
+
+      let cls = 'r-entered', icon = '⏳';
+      if (status === 'APPROVED') { cls = 'r-approved'; icon = '✓'; }
+      if (status === 'REJECTED') { cls = 'r-rejected'; icon = '✗'; }
+
+      msg.innerHTML = `
+        <span class="${cls}">${icon} ${status}</span><br>
+        ${statusMsg}<br>
+        ${acctNum ? '<strong>Account Number: ' + acctNum + '</strong><br>' : ''}
+        <span style="color:#888;font-family:'Courier New',monospace;font-size:10px">
+          Request ID: ${r.requestid || rid} · live from formsproto
+        </span>`;
+    }
+    document.getElementById('statusText').textContent = 'Query complete — ' + rows.length + ' row(s) returned';
+  } catch(e) {
+    panel.classList.add('show');
+    msg.innerHTML = '<span class="r-error">CORS or network error: ' + e.message + '<br>Serve this file via <code>python3 -m http.server 8080</code> or check your ORDS URL.</span>';
+    document.getElementById('statusText').textContent = 'Error';
+  }
+  spinner.classList.remove('show');
+}
+
+init();
+</script>
+</body>
+</html>
