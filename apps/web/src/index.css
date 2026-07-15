@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neo-yellow: #F5E642;
+  --color-neo-red: #FF1F5A;
+  --color-neo-blue: #1A6EFF;
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+/* Base reset additions */
+*, *::before, *::after {
+  box-sizing: border-box;
+}

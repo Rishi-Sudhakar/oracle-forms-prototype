@@ -1,0 +1,381 @@
+/* Win98-era Oracle Forms UI styles.
+   Used by LegacyReplica, AccountOpening, ManagerApproval, CheckStatus. */
+
+.f-body {
+  font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  background: #008080;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 12px;
+  gap: 8px;
+}
+
+.f-window {
+  width: 100%;
+  border: 2px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  box-shadow: 2px 2px 0 #000;
+  background: #d4d0c8;
+}
+
+.f-title-bar {
+  background: linear-gradient(to right, #000082, #1084d0);
+  color: white;
+  padding: 3px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+.f-title-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.f-title-icon {
+  width: 15px;
+  height: 15px;
+  background: #ff8;
+  border: 1px solid #c40;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c40;
+  font-weight: 900;
+}
+.f-title-btns {
+  display: flex;
+  gap: 2px;
+}
+.f-title-btn {
+  width: 16px;
+  height: 14px;
+  background: #d4d0c8;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #000;
+  font-weight: 700;
+}
+
+.f-menu-bar {
+  background: #d4d0c8;
+  border-bottom: 1px solid #808080;
+  padding: 2px 4px;
+  display: flex;
+  gap: 0;
+}
+.f-menu-item {
+  padding: 1px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.f-menu-item:hover { background: #000080; color: white; }
+
+.f-toolbar {
+  background: #d4d0c8;
+  border-bottom: 1px solid #808080;
+  padding: 2px 4px;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+.f-tb-btn {
+  width: 22px;
+  height: 22px;
+  background: #d4d0c8;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+}
+.f-tb-btn:active { border-color: #808080 #fff #fff #808080; }
+.f-tb-sep { width: 1px; height: 20px; background: #808080; margin: 0 3px; }
+
+.f-tabs {
+  background: #d4d0c8;
+  border-bottom: 2px solid #808080;
+  padding: 4px 4px 0;
+  display: flex;
+  gap: 2px;
+}
+.f-tab {
+  padding: 3px 14px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid;
+  border-color: #fff #808080 transparent #fff;
+  background: #d4d0c8;
+  position: relative;
+  top: 1px;
+  color: #444;
+}
+.f-tab.active {
+  border-bottom-color: #d4d0c8;
+  color: #000;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.f-canvas {
+  background: #d4d0c8;
+  padding: 12px 16px 16px;
+  min-height: 340px;
+}
+
+.f-title-block {
+  background: #d4d0c8;
+  border: 1px solid;
+  border-color: #808080 #fff #fff #808080;
+  padding: 4px 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.f-title-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #000080;
+}
+.f-badge {
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  background: #1a6eff;
+  color: #fff;
+  padding: 2px 6px;
+  font-weight: 700;
+}
+
+.f-section {
+  border: 1px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+.f-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #000080;
+}
+
+.f-field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.f-field-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.f-label {
+  font-size: 11px;
+  color: #000;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+.f-req { color: #aa0000; }
+
+.f-input,
+.f-select {
+  font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  background: white;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-bottom: 1px solid #dfdfdf;
+  border-right: 1px solid #dfdfdf;
+  outline: none;
+  padding: 1px 3px;
+  height: 19px;
+  color: #000;
+}
+.f-input:focus,
+.f-select:focus { border-color: #000; }
+.f-select { padding: 0 2px; cursor: pointer; }
+.f-input[readOnly] { background: #d4d0c8; color: #555; }
+
+.f-btn {
+  font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  background: #d4d0c8;
+  border: 1px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  padding: 2px 14px;
+  min-width: 70px;
+  cursor: pointer;
+  height: 22px;
+  white-space: nowrap;
+}
+.f-btn:hover { background: #e0dcda; }
+.f-btn:active {
+  border-color: #808080 #dfdfdf #dfdfdf #808080;
+  padding: 3px 13px 1px 15px;
+}
+.f-btn:disabled { opacity: 0.5; cursor: default; }
+.f-btn.primary { font-weight: 700; }
+.f-btn.approve { background: #e8ffe8; border-color: #88cc88 #226622 #226622 #88cc88; color: #006600; font-weight: 700; }
+.f-btn.reject { background: #fff0f0; border-color: #ffaaaa #880000 #880000 #ffaaaa; color: #880000; }
+
+.f-btn-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Grid/table for record blocks */
+.f-grid {
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-bottom: 1px solid #dfdfdf;
+  border-right: 1px solid #dfdfdf;
+  margin-bottom: 8px;
+  overflow-x: auto;
+}
+.f-grid table { border-collapse: collapse; width: 100%; min-width: 600px; font-size: 11px; }
+.f-grid th {
+  background: #000080;
+  color: white;
+  padding: 2px 6px;
+  text-align: left;
+  font-weight: 700;
+  white-space: nowrap;
+  border-right: 1px solid #4040a0;
+}
+.f-grid td {
+  padding: 2px 6px;
+  border-bottom: 1px solid #e8e8e8;
+  border-right: 1px solid #f0f0f0;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.f-grid tbody tr:nth-child(even) td { background: #f5f5f5; }
+.f-grid tbody tr.selected td { background: #000080; color: white; }
+.f-grid tbody tr.approved td { background: #dfffdf !important; color: #006600; }
+.f-grid tbody tr.rejected td { background: #ffe0e0 !important; color: #880000; }
+
+/* Result / message panels */
+.f-result-panel {
+  border: 1px solid #808080;
+  background: #fff;
+  padding: 8px 10px;
+  margin-top: 8px;
+  min-height: 48px;
+  font-size: 11px;
+}
+
+/* Live badge */
+.f-live-badge {
+  width: 100%;
+  background: #1a6eff;
+  color: #fff;
+  border: 2px solid #000;
+  padding: 5px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Config banner */
+.f-config-banner {
+  width: 100%;
+  background: #f5e642;
+  border: 2px solid #000;
+  padding: 8px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+}
+
+/* Status bar */
+.f-status-bar {
+  background: #d4d0c8;
+  border-top: 1px solid #808080;
+  padding: 2px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: #555;
+}
+.f-status-item {
+  border: 1px solid;
+  border-color: #808080 #dfdfdf #dfdfdf #808080;
+  padding: 1px 6px;
+  font-size: 10px;
+}
+
+/* Message overlay (simulates FND_MESSAGE) */
+.f-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.f-msgbox {
+  background: #d4d0c8;
+  border: 2px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  box-shadow: 4px 4px 0 #000;
+  min-width: 260px;
+  max-width: 400px;
+}
+.f-msgbox-title {
+  background: linear-gradient(to right, #000082, #1084d0);
+  color: white;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.f-msgbox-body {
+  padding: 14px 16px 10px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.f-msgbox-btns {
+  padding: 0 16px 12px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Demo label banner */
+.f-demo-label {
+  width: 100%;
+  background: #f5e642;
+  border: 2px solid #000;
+  padding: 6px 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #000;
+}
