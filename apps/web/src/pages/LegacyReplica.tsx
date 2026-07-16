@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import FormsWindow from '../components/FormsWindow'
 import MsgBox from '../components/MsgBox'
 import '../styles/forms.css'
@@ -28,9 +28,67 @@ const TABS = [
   { id: 'status', label: 'G1_CHECKSTATUS1' },
 ]
 
+const FORM_TITLES: Record<string, string> = {
+  account: 'G1_ACCOUNTOPENING',
+  approval: 'G1_MANAGERAPPROVAL',
+  status: 'G1_CHECKSTATUS1',
+}
+
+function FormsLoadingOverlay({ formId, onDone }: { formId: string; onDone: () => void }) {
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) { clearInterval(interval); setTimeout(onDone, 200); return 100 }
+        return p + 8
+      })
+    }, 80)
+    return () => clearInterval(interval)
+  }, [onDone])
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: '#d4d0c8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 9999, fontFamily: 'Tahoma, Arial, sans-serif' }}>
+      {/* Title bar */}
+      <div style={{ width: 420, border: '2px solid', borderColor: '#dfdfdf #808080 #808080 #dfdfdf', boxShadow: '2px 2px 0 #000' }}>
+        <div style={{ background: 'linear-gradient(to right, #000082, #1084d0)', color: 'white', padding: '3px 6px', fontSize: 11, fontWeight: 700, display: 'flex', justifyContent: 'space-between' }}>
+          <span>Oracle Forms Server</span>
+          <span style={{ cursor: 'default' }}>✕</span>
+        </div>
+        <div style={{ background: '#d4d0c8', padding: '24px 28px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 18 }}>
+            <div style={{ fontFamily: 'Arial Black, Arial', fontSize: 16, fontWeight: 900, color: '#000080', marginBottom: 4 }}>Oracle Application Framework</div>
+            <div style={{ fontSize: 11, color: '#555' }}>Loading form: <strong>{formId}</strong></div>
+          </div>
+          <div style={{ border: '1px solid', borderColor: '#808080 #dfdfdf #dfdfdf #808080', background: 'white', height: 18, marginBottom: 8, overflow: 'hidden' }}>
+            <div style={{ height: '100%', background: 'linear-gradient(to right, #000082, #1084d0)', width: `${progress}%`, transition: 'width 0.1s linear' }} />
+          </div>
+          <div style={{ fontSize: 10, color: '#888', fontFamily: 'Courier New, monospace', textAlign: 'center' }}>
+            {progress < 30 && 'Connecting to Forms Server...'}
+            {progress >= 30 && progress < 60 && 'Loading form definition...'}
+            {progress >= 60 && progress < 90 && `Initializing ${formId}...`}
+            {progress >= 90 && 'Opening form...'}
+          </div>
+        </div>
+      </div>
+      <div style={{ marginTop: 12, fontSize: 10, color: '#777', fontFamily: 'Courier New, monospace' }}>
+        Oracle Forms Runtime -- formsproto [online_banking]
+      </div>
+    </div>
+  )
+}
+
 export default function LegacyReplica() {
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState('account')
+  const [searchParams] = useSearchParams()
+
+  const formParam = searchParams.get('form') ?? 'account'
+  const initialTab = formParam === 'approval' ? 'approval' : formParam === 'status' ? 'status' : 'account'
+
+  const isPopup = typeof window !== 'undefined' && window.opener !== null
+  const [launching, setLaunching] = useState(isPopup)
+
+  const [activeTab, setActiveTab] = useState(initialTab)
   const [db, setDb] = useState<Record<number, Request>>(INITIAL_DB)
   const [nextReqId, setNextReqId] = useState(60)
   const [msg, setMsg] = useState<{ title: string; body: string } | null>(null)
@@ -103,11 +161,11 @@ export default function LegacyReplica() {
     }
   }
 
-  const windowTitle = activeTab === 'account'
-    ? 'Oracle Forms Runtime - G1_ACCOUNTOPENING [online_banking]'
-    : activeTab === 'approval'
-      ? 'Oracle Forms Runtime - G1_MANAGERAPPROVAL [online_banking]'
-      : 'Oracle Forms Runtime - G1_CHECKSTATUS1 [online_banking]'
+  const windowTitle = `Oracle Forms Runtime - ${FORM_TITLES[activeTab] ?? 'G1_ACCOUNTOPENING'} [online_banking]`
+
+  if (launching) {
+    return <FormsLoadingOverlay formId={FORM_TITLES[initialTab] ?? 'G1_ACCOUNTOPENING'} onDone={() => setLaunching(false)} />
+  }
 
   return (
     <div className="f-body">
