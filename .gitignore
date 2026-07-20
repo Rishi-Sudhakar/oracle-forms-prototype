@@ -9,4 +9,3 @@ __pycache__/
 *.log
 Thumbs.db
 apps/web/dist/
-github protos/
