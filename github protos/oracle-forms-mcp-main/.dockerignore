@@ -1,3 +1,0 @@
-# Only the built server dist is copied into the image.
-*
-!server/build/install/server/
