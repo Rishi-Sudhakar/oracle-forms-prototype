@@ -21,7 +21,7 @@ export default function AccountOpening() {
   const { base, save, configured } = useOrds()
   const navigate = useNavigate()
   const [form, setForm] = useState<FormState>(EMPTY)
-  const [status, setStatus] = useState('Enter record details -- * required')
+  const [status, setStatus] = useState('Enter record details (* required)')
   const [loading, setLoading] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; html: string } | null>(null)
 
@@ -53,9 +53,9 @@ export default function AccountOpening() {
       })
       const data: { ok?: boolean; requestId?: number; requestid?: number; error?: string } = await res.json()
       if (data.ok) {
-        const rid = data.requestId ?? data.requestid ?? '--'
-        setMsg({ ok: true, html: `<strong>APPLICATION SUBMITTED SUCCESSFULLY</strong><br>Request ID: <strong>${rid}</strong><br>Status: ENTERED (pending manager approval)<br><span style="font-family:Courier New;font-size:10px">INSERTed into GROUP1_ACCOUNTREQUEST -- live formsproto</span>` })
-        setStatus(`Record saved -- Request ID: ${rid}`)
+        const rid = data.requestId ?? data.requestid ?? 'N/A'
+        setMsg({ ok: true, html: `<strong>APPLICATION SUBMITTED SUCCESSFULLY</strong><br>Request ID: <strong>${rid}</strong><br>Status: ENTERED (pending manager approval)<br><span style="font-family:Courier New;font-size:10px">INSERTed into GROUP1_ACCOUNTREQUEST (live formsproto)</span>` })
+        setStatus(`Record saved. Request ID: ${rid}`)
       } else {
         setMsg({ ok: false, html: `Error from DB: ${data.error ?? 'Unknown error'}` })
         setStatus('Submission failed')
@@ -75,13 +75,13 @@ export default function AccountOpening() {
       <FormsWindow
         title="Oracle Forms Runtime - G1_ACCOUNTOPENING [online_banking] [LIVE]"
         maxWidth="800px"
-        liveBadge="LIVE -- ORDS-BACKED -- formsproto Autonomous DB 23ai -- pkg_ob_accountopening.submit_account_request"
+        liveBadge="LIVE | ORDS-BACKED | formsproto Autonomous DB 23ai | pkg_ob_accountopening.submit_account_request"
         statusText={status}
-        statusItems={['BLOCK: G1_ACCOUNTOPENING', 'ORACLE FORMS 10g -- ORDS']}
+        statusItems={['BLOCK: G1_ACCOUNTOPENING', 'Oracle Forms 14c | ORDS']}
       >
         <div className="f-title-block">
           <div className="f-title-text">ACCOUNT OPENING REQUEST FORM</div>
-          <span className="f-badge">LIVE -- INSERT -- GROUP1_ACCOUNTREQUEST</span>
+          <span className="f-badge">LIVE | INSERT | GROUP1_ACCOUNTREQUEST</span>
         </div>
 
         <div className="f-section">
@@ -90,14 +90,14 @@ export default function AccountOpening() {
             <div className="f-field-group">
               <span className="f-label">Branch <span className="f-req">*</span></span>
               <select className="f-select" style={{ width: 140 }} value={form.branch} onChange={set('branch')}>
-                <option value="">-- Select --</option>
+                <option value="">(Select)</option>
                 {['NORTH', 'SOUTH', 'EAST', 'WEST', 'CENTRAL'].map(b => <option key={b}>{b}</option>)}
               </select>
             </div>
             <div className="f-field-group">
               <span className="f-label">Account Type <span className="f-req">*</span></span>
               <select className="f-select" style={{ width: 140 }} value={form.account_type} onChange={set('account_type')}>
-                <option value="">-- Select --</option>
+                <option value="">(Select)</option>
                 {['SAVINGS', 'CHECKING', 'CURRENT'].map(t => <option key={t}>{t}</option>)}
               </select>
             </div>
@@ -110,7 +110,7 @@ export default function AccountOpening() {
             <div className="f-field-group">
               <span className="f-label">Title <span className="f-req">*</span></span>
               <select className="f-select" style={{ width: 80 }} value={form.title} onChange={set('title')}>
-                <option value="">--</option>
+                <option value="">(Select)</option>
                 {['Mr', 'Ms', 'Mrs', 'Dr'].map(t => <option key={t}>{t}</option>)}
               </select>
             </div>
@@ -169,7 +169,7 @@ export default function AccountOpening() {
 
         <div className="f-btn-row">
           <button className="f-btn primary" onClick={submit} disabled={loading}>SUBMIT APPLICATION</button>
-          <button className="f-btn" onClick={() => { setForm(EMPTY); setMsg(null); setStatus('Form cleared -- enter record details') }}>CLEAR</button>
+          <button className="f-btn" onClick={() => { setForm(EMPTY); setMsg(null); setStatus('Form cleared. Enter record details.') }}>CLEAR</button>
           <button className="f-btn" onClick={() => navigate('/')}>HOME</button>
           {loading && <span style={{ fontSize: 10, color: '#888', marginLeft: 8 }}>Submitting to DB...</span>}
         </div>
@@ -180,7 +180,7 @@ export default function AccountOpening() {
         )}
 
         <div style={{ marginTop: 10, fontSize: 10, color: '#888', borderTop: '1px solid #b0b0b0', paddingTop: 6 }}>
-          POST /ob/requests/ -- pkg_ob_accountopening.submit_account_request -- INSERT GROUP1_ACCOUNTREQUEST
+          POST /ob/requests/ | pkg_ob_accountopening.submit_account_request | INSERT GROUP1_ACCOUNTREQUEST
         </div>
       </FormsWindow>
     </div>

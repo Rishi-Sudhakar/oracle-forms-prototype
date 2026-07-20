@@ -41,14 +41,14 @@ export const MODULES: Module[] = [
   {
     file: 'G1_LOGIN', purpose: 'Customer login. Validates account number + password against DB, then navigates to transaction entry.',
     complexity: 'Low', pkgStatus: 'extracted', pkg: 'pkg_ob_login',
-    logic: ['SELECT password11 FROM GRP1_REGISTEREDINFO WHERE Account_Number=:T1', 'Compare entered password -- match/reject', 'Pass account number as CALL_FORM parameter P1 to G1_TRANSACTIONENTRY'],
+    logic: ['SELECT password11 FROM GRP1_REGISTEREDINFO WHERE Account_Number=:T1', 'Compare entered password: match or reject', 'Pass account number as CALL_FORM parameter P1 to G1_TRANSACTIONENTRY'],
     tables: ['GRP1_REGISTEREDINFO'],
     note: 'APEX: authenticate_customer() called from APEX login page. CALL_FORM param -> APEX session state item.',
   },
   {
     file: 'G1_CHECKSTATUS', alias: 'G1_CHECKSTATUS1', purpose: 'Customer self-service: check account application status by Request ID.',
     complexity: 'Low', pkgStatus: 'extracted', pkg: 'pkg_ob_checkstatus',
-    logic: ['SELECT Status FROM GROUP1_ACCOUNTREQUEST WHERE RequestId=:T1', 'If APPROVED -- also SELECT Account_Number FROM GRP1_REGISTEREDINFO', 'Three-branch conditional message: APPROVED / ENTERED / REJECTED'],
+    logic: ['SELECT Status FROM GROUP1_ACCOUNTREQUEST WHERE RequestId=:T1', 'If APPROVED: also SELECT Account_Number FROM GRP1_REGISTEREDINFO', 'Three-branch conditional message: APPROVED / ENTERED / REJECTED'],
     tables: ['GROUP1_ACCOUNTREQUEST', 'GRP1_REGISTEREDINFO'],
     note: 'File G1_CHECKSTATUS_fmb.xml contains FormModule G1_CHECKSTATUS1; naming mismatch flagged.',
   },

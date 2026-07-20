@@ -1,0 +1,33 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can access their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Forms - user-level isolation
+    match /forms/{formId} {
+      // Allow create if user sets themselves as owner
+      allow create: if request.auth != null && 
+                    request.resource.data.userId == request.auth.uid;
+      
+      // Allow read/update/delete if user owns the form
+      allow read, update, delete: if request.auth != null && 
+                                   resource.data.userId == request.auth.uid;
+      
+      // Units subcollection - inherit access from parent form
+      match /units/{unitId} {
+        allow read, write: if request.auth != null && 
+                           get(/databases/$(database)/documents/forms/$(formId)).data.userId == request.auth.uid;
+        
+        // Generated code subcollection
+        match /generated/{genId} {
+          allow read, write: if request.auth != null && 
+                             get(/databases/$(database)/documents/forms/$(formId)).data.userId == request.auth.uid;
+        }
+      }
+    }
+  }
+}

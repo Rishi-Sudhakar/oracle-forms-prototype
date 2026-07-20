@@ -28,7 +28,7 @@ export default function CheckStatus() {
 
       if (items.length === 0) {
         setResult({ html: `<span style="color:#aa0000">No application found for Request ID: ${reqId}</span>` })
-        setStatusText(`Query complete -- 0 rows returned`)
+        setStatusText(`Query complete: 0 rows returned`)
         return
       }
 
@@ -41,8 +41,8 @@ export default function CheckStatus() {
       if (status === 'APPROVED') { color = '#006600'; icon = 'APPROVED' }
       if (status === 'REJECTED') { color = '#aa0000'; icon = 'REJECTED' }
 
-      setResult({ html: `<span style="color:${color};font-weight:700">${icon}</span><br>${statusMsg}<br>${acctNum ? `<strong>Account Number: ${acctNum}</strong><br>` : ''}<span style="color:#888;font-family:Courier New,monospace;font-size:10px">Request ID: ${r.requestid ?? reqId} -- live from formsproto</span>` })
-      setStatusText(`Query complete -- ${items.length} row(s) returned`)
+      setResult({ html: `<span style="color:${color};font-weight:700">${icon}</span><br>${statusMsg}<br>${acctNum ? `<strong>Account Number: ${acctNum}</strong><br>` : ''}<span style="color:#888;font-family:Courier New,monospace;font-size:10px">Request ID: ${r.requestid ?? reqId} (live from formsproto)</span>` })
+      setStatusText(`Query complete: ${items.length} row(s) returned`)
     } catch (e) {
       const err = e as Error
       setResult({ html: `<span style="color:#aa0000">CORS or network error: ${err.message}<br>Check ORDS URL and ensure the DB is reachable.</span>` })
@@ -58,13 +58,13 @@ export default function CheckStatus() {
       <FormsWindow
         title="Oracle Forms Runtime - G1_CHECKSTATUS1 [online_banking] [LIVE]"
         maxWidth="700px"
-        liveBadge="LIVE -- ORDS-BACKED -- formsproto Autonomous DB 23ai -- pkg_ob_checkstatus.check_request_status"
+        liveBadge="LIVE | ORDS-BACKED | formsproto Autonomous DB 23ai | pkg_ob_checkstatus.check_request_status"
         statusText={statusText}
-        statusItems={['BLOCK: G1_CHECKSTATUS1', 'ORACLE FORMS 10g -- ORDS']}
+        statusItems={['BLOCK: G1_CHECKSTATUS1', 'Oracle Forms 14c | ORDS']}
       >
         <div className="f-title-block">
           <div className="f-title-text">CHECK APPLICATION STATUS</div>
-          <span className="f-badge">LIVE -- ORDS</span>
+          <span className="f-badge">LIVE | ORDS</span>
         </div>
 
         <div className="f-section">
@@ -87,7 +87,7 @@ export default function CheckStatus() {
 
         {result && (
           <div className="f-result-panel">
-            <div className="f-section-title">RESULT -- live from GROUP1_ACCOUNTREQUEST + GRP1_REGISTEREDINFO</div>
+            <div className="f-section-title">RESULT: live from GROUP1_ACCOUNTREQUEST + GRP1_REGISTEREDINFO</div>
             <div dangerouslySetInnerHTML={{ __html: result.html }} style={{ fontSize: 11, lineHeight: 1.8 }} />
           </div>
         )}
@@ -98,7 +98,7 @@ export default function CheckStatus() {
         </div>
 
         <div style={{ marginTop: 12, fontSize: 10, color: '#888', borderTop: '1px solid #b0b0b0', paddingTop: 6 }}>
-          GET /ob/status/:id -- SELECT Status, Account_Number FROM GROUP1_ACCOUNTREQUEST LEFT JOIN GRP1_REGISTEREDINFO
+          GET /ob/status/:id | SELECT Status, Account_Number FROM GROUP1_ACCOUNTREQUEST LEFT JOIN GRP1_REGISTEREDINFO
         </div>
       </FormsWindow>
     </div>

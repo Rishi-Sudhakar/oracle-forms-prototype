@@ -1,0 +1,12 @@
+# Oracle installation path
+oracle.path=E:\\Oracle\\product\\Middleware\\as_1
+
+# Directory containing the .fmb files to process
+# Default is the current directory
+input.directory=.
+
+# Output directory for the XML files
+xml.output.directory=xml
+
+# Output directory for the cleaned TXT files
+txt.output.directory=clean

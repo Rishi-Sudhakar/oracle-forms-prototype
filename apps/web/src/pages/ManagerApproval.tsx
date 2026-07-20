@@ -27,7 +27,7 @@ export default function ManagerApproval() {
   const navigate = useNavigate()
   const [rows, setRows] = useState<PendingRow[]>([])
   const [rowState, setRowState] = useState<Record<number, RowState>>({})
-  const [statusText, setStatusText] = useState("Ready -- click REFRESH to query live DB")
+  const [statusText, setStatusText] = useState("Ready: click REFRESH to query live DB")
   const [liveCount, setLiveCount] = useState('')
   const [loading, setLoading] = useState(false)
   const [msg, setMsg] = useState<{ title: string; body: string } | null>(null)
@@ -44,7 +44,7 @@ export default function ManagerApproval() {
       setRows(items)
       setRowState({})
       setLiveCount(`${items.length} PENDING`)
-      setStatusText(items.length === 0 ? 'No pending requests -- all requests processed' : `${items.length} pending request(s) -- live from formsproto`)
+      setStatusText(items.length === 0 ? 'No pending requests. All requests processed.' : `${items.length} pending request(s), live from formsproto`)
     } catch (e) {
       const err = e as Error
       setStatusText(`Error: ${err.message}`)
@@ -65,7 +65,7 @@ export default function ManagerApproval() {
       const data: { ok?: boolean; error?: string } = await res.json()
       if (data.ok) {
         setRowState(p => ({ ...p, [rid]: action === 'approve' ? 'approved' : 'rejected' }))
-        setStatusText(`${action === 'approve' ? 'Approved' : 'Rejected'} Request ID ${rid} -- live DB updated`)
+        setStatusText(`${action === 'approve' ? 'Approved' : 'Rejected'} Request ID ${rid}: live DB updated`)
         if (action === 'approve') {
           setMsg({ title: 'APPROVAL COMPLETE', body: `Request <strong>${rid}</strong> has been approved.<br>Account number generated via:<br><code style="font-size:10px">AccountType(2) || FirstName(3) || lpad(seq,5,'0')</code><br>New record INSERTed into GRP1_REGISTEREDINFO with password11='0000'.<br><em>Use Check Status page to verify the account number.</em>` })
         } else {
@@ -74,7 +74,7 @@ export default function ManagerApproval() {
       } else {
         setRowState(p => ({ ...p, [rid]: 'pending' }))
         setMsg({ title: 'DB ERROR', body: `Error from pkg_ob_managerapproval: ${data.error ?? 'Unknown'}` })
-        setStatusText('Error -- see message')
+        setStatusText('Error: see message')
       }
     } catch (e) {
       const err = e as Error
@@ -98,14 +98,14 @@ export default function ManagerApproval() {
       <FormsWindow
         title="Oracle Forms Runtime - G1_MANAGERAPPROVAL [online_banking] [LIVE]"
         maxWidth="960px"
-        liveBadge="LIVE -- ORDS-BACKED -- formsproto Autonomous DB 23ai -- pkg_ob_managerapproval.approve_request / reject_request"
+        liveBadge="LIVE | ORDS-BACKED | formsproto Autonomous DB 23ai | pkg_ob_managerapproval.approve_request / reject_request"
         liveCount={liveCount}
         statusText={statusText}
-        statusItems={['BLOCK: G1_MANAGERAPPROVAL_BLOCK', 'ORACLE FORMS 10g -- ORDS']}
+        statusItems={['BLOCK: G1_MANAGERAPPROVAL_BLOCK', 'Oracle Forms 14c | ORDS']}
       >
         <div className="f-title-block">
-          <div className="f-title-text">MANAGER APPROVAL -- PENDING ACCOUNT REQUESTS</div>
-          <span className="f-badge">LIVE -- GROUP1_ACCOUNTREQUEST WHERE Status='ENTERED'</span>
+          <div className="f-title-text">MANAGER APPROVAL: PENDING ACCOUNT REQUESTS</div>
+          <span className="f-badge">LIVE | GROUP1_ACCOUNTREQUEST WHERE Status='ENTERED'</span>
         </div>
 
         <div className="f-btn-row" style={{ marginBottom: 8 }}>
@@ -162,9 +162,9 @@ export default function ManagerApproval() {
         </div>
 
         <div style={{ marginTop: 10, fontSize: 10, color: '#888', borderTop: '1px solid #b0b0b0', paddingTop: 6 }}>
-          GET /ob/pending/ -- SELECT ... FROM GROUP1_ACCOUNTREQUEST WHERE Status='ENTERED'<br />
-          POST /ob/approve/:id -- pkg_ob_managerapproval.approve_request -- UPDATE Status='APPROVED', INSERT GRP1_REGISTEREDINFO<br />
-          POST /ob/reject/:id -- pkg_ob_managerapproval.reject_request -- UPDATE Status='REJECTED'
+          GET /ob/pending/ | SELECT ... FROM GROUP1_ACCOUNTREQUEST WHERE Status='ENTERED'<br />
+          POST /ob/approve/:id | pkg_ob_managerapproval.approve_request | UPDATE Status='APPROVED', INSERT GRP1_REGISTEREDINFO<br />
+          POST /ob/reject/:id | pkg_ob_managerapproval.reject_request | UPDATE Status='REJECTED'
         </div>
       </FormsWindow>
 

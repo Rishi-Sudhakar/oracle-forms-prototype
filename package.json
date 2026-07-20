@@ -2,11 +2,18 @@
   "name": "oracle-forms-prototype",
   "private": true,
   "workspaces": [
-    "apps/web"
+    "apps/web",
+    "apps/api"
   ],
   "scripts": {
     "dev": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "dev:pipeline": "cd apps/pipeline && uvicorn main:app --port 3001 --reload",
+    "dev:all": "concurrently -n web,pipeline -c cyan,magenta \"npm run dev\" \"npm run dev:pipeline\"",
     "build": "npm run build --workspace=apps/web",
     "preview": "npm run preview --workspace=apps/web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
   }
 }

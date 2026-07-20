@@ -15,8 +15,8 @@ function PkgLabel({ status, pkg }: { status: PkgStatus; pkg?: string }) {
   if (status === 'extracted')
     return <span className="font-mono text-[10px] font-bold text-[#1a6eff]">{pkg}</span>
   if (status === 'flagged')
-    return <span className="font-mono text-[10px] font-bold text-[#FF1F5A]">not generated -- see security findings</span>
-  return <span className="font-mono text-[10px] text-[#aaa]">no package -- no extractable logic</span>
+    return <span className="font-mono text-[10px] font-bold text-[#FF1F5A]">not generated (see security findings)</span>
+  return <span className="font-mono text-[10px] text-[#aaa]">no package, no extractable logic</span>
 }
 
 export default function Dashboard() {
@@ -42,16 +42,16 @@ export default function Dashboard() {
       {/* HEADER */}
       <header className="bg-black text-[#F5E642] px-10 py-10 border-b-4 border-[#F5E642]">
         <div className="font-mono text-[11px] tracking-[3px] text-[#777] mb-3.5">
-          AI-ASSISTED LEGACY MODERNIZATION -- GALENT -- 2026-07-08
+          AI-ASSISTED LEGACY MODERNIZATION | GALENT | 2026-07-08
         </div>
         <div
           className="font-black text-[clamp(36px,6vw,60px)] leading-none"
           style={{ fontFamily: "'Arial Black', Arial, sans-serif" }}
         >
-          ORACLE FORMS <span className="text-[#FF1F5A]">--&gt;</span> APEX
+          ORACLE FORMS <span className="text-[#FF1F5A]">&rarr;</span> APEX
         </div>
         <div className="font-mono text-[12px] tracking-wide text-[#777] mt-4">
-          MODULE: online_banking -- formsproto Oracle Autonomous DB 23ai
+          MODULE: online_banking | formsproto Oracle Autonomous DB 23ai
         </div>
         <div className="text-[13px] text-[#999] mt-2.5 max-w-[640px]">
           One AI agent, one pass: parse the legacy app, cross-reference the live schema, extract the logic, stand up a real API, and hand it to any frontend.
@@ -69,10 +69,10 @@ export default function Dashboard() {
         </div>
         <div className="flex items-stretch gap-0 flex-wrap md:flex-nowrap">
           {[
-            { n: '01', tag: '.FMB XML -- .SQL', title: 'Drop the legacy files', desc: 'Point the agent at the exported Forms XML and the target schema DDL. Nothing to upload; it reads local files directly.' },
-            { n: '02', tag: 'MCP -- SQLcl', title: 'Agent analyzes and cross-references', desc: 'Parses every trigger and block, then queries the live DB over MCP to catch schema mismatches before they cause a runtime failure.' },
+            { n: '01', tag: '.FMB XML + .SQL', title: 'Drop the legacy files', desc: 'Point the agent at the exported Forms XML and the target schema DDL. Nothing to upload; it reads local files directly.' },
+            { n: '02', tag: 'MCP + SQLcl', title: 'Agent analyzes and cross-references', desc: 'Parses every trigger and block, then queries the live DB over MCP to catch schema mismatches before they cause a runtime failure.' },
             { n: '03', tag: 'GATE', title: 'Analysis report generated', desc: 'The agent hands back a full report: modules found, logic extracted, schema bugs, security issues. Migration does not proceed until this is reviewed.', link: '#report', linkLabel: 'VIEW THE REPORT' },
-            { n: '04', tag: 'PL/SQL -- ORDS', title: 'Extract logic, expose as API', desc: 'Once approved, business logic becomes PL/SQL packages, compiled into the DB. Agent then defines ORDS REST endpoints over MCP, with no manual console clicks.' },
+            { n: '04', tag: 'PL/SQL + ORDS', title: 'Extract logic, expose as API', desc: 'Once approved, business logic becomes PL/SQL packages, compiled into the DB. Agent then defines ORDS REST endpoints over MCP, with no manual console clicks.' },
             { n: '05', tag: 'ANY STACK', title: 'Build the frontend', desc: 'Wire any UI to those same REST endpoints: this React app, Oracle APEX Builder, hand-rolled HTML, whatever the team already knows.' },
             { n: '06', tag: 'LIVE DEMO', title: 'A working app', desc: 'End-to-end, clickable, backed by the real database. Try both the legacy simulation and the live rebuild below.', final: true },
           ].map((step, i, arr) => (
@@ -111,7 +111,7 @@ export default function Dashboard() {
           { num: '12', label: 'MODULES ANALYZED', sub: 'All 12 .fmb XML exports processed', bg: 'bg-[#F5E642] text-black' },
           { num: '08', label: 'PACKAGES GENERATED', sub: 'PL/SQL extracted, validated, committed', bg: 'bg-[#FF1F5A] text-white' },
           { num: '05', label: 'SCHEMA BUGS CAUGHT', sub: '2 would break production silently', bg: 'bg-[#1A6EFF] text-white' },
-          { num: '~40', label: 'HOURS SAVED', sub: 'vs. manual analysis + extraction', bg: 'bg-black text-[#F5E642]' },
+          { num: '~40', label: 'HOURS SAVED', sub: 'vs. manual analysis and extraction', bg: 'bg-black text-[#F5E642]' },
         ].map((s, i, arr) => (
           <div key={s.label} className={`${s.bg} px-8 py-9 flex flex-col gap-1.5 ${i < arr.length - 1 ? 'border-r-[3px] border-black' : ''}`}>
             <span className="font-black text-[clamp(44px,5vw,64px)] leading-none tabular-nums" style={{ fontFamily: "'Arial Black', Arial, sans-serif" }}>{s.num}</span>
@@ -123,7 +123,7 @@ export default function Dashboard() {
 
       {/* CHARTS */}
       <section className="px-10 py-12 border-b-[3px] border-black">
-        <div className="font-mono text-[10px] tracking-[3px] font-bold text-[#888] mb-2.5">ANALYSIS REPORT -- STEP 03 OUTPUT</div>
+        <div className="font-mono text-[10px] tracking-[3px] font-bold text-[#888] mb-2.5">ANALYSIS REPORT: STEP 03 OUTPUT</div>
         <div className="font-black text-[clamp(22px,3vw,30px)] mb-8" style={{ fontFamily: "'Arial Black', Arial, sans-serif" }}>
           What the agent found across 12 modules
         </div>
@@ -232,19 +232,19 @@ export default function Dashboard() {
               stripe: '#FF1F5A', sevLabel: 'CRITICAL', sevColor: '#FF1F5A',
               title: 'Hardcoded Manager Credentials',
               desc: <>Password <code className="font-mono text-[12px] bg-[#ffe8ee] px-1">"ADMIN123"</code> is embedded plaintext in a WHEN-BUTTON-PRESSED trigger inside the compiled .fmb binary. Any developer who opens Forms Builder extracts it immediately.</>,
-              fix: 'FIX -- Replace entirely with APEX workspace authentication. Apply MANAGER role authorization scheme to approval page. Do not move this credential to PL/SQL.',
+              fix: 'FIX: Replace entirely with APEX workspace authentication. Apply MANAGER role authorization scheme to approval page. Do not move this credential to PL/SQL.',
             },
             {
               stripe: '#FF8C00', sevLabel: 'HIGH', sevColor: '#CC6A00',
               title: 'Plaintext Password Storage',
               desc: <>Customer passwords stored as <code className="font-mono text-[12px] bg-[#fff5e0] px-1">VARCHAR2(10)</code> plaintext in <code className="font-mono text-[12px] bg-[#fff5e0] px-1">GRP1_REGISTEREDINFO.password11</code>. Any DBA or unrestricted SELECT exposes all credentials.</>,
-              fix: 'FIX -- APEX_UTIL.GET_HASH before storage, or use APEX End User Account management (handles hashing natively).',
+              fix: 'FIX: Use APEX_UTIL.GET_HASH before storage, or use APEX End User Account management (handles hashing natively).',
             },
             {
               stripe: '#F5C518', sevLabel: 'MEDIUM', sevColor: '#8B6914',
               title: 'Universal Default Password',
               desc: <>Every approved account is inserted with <code className="font-mono text-[12px] bg-[#fffce0] px-1">password11 = '0000'</code>. All new customers share the same initial credential until they manually self-register online.</>,
-              fix: 'FIX -- Generate random temporary password on approval. Email to customer. Enforce password change on first login.',
+              fix: 'FIX: Generate random temporary password on approval. Email to customer. Enforce password change on first login.',
             },
           ].map(f => (
             <div key={f.title} className="border-[3px] border-black shadow-[5px_5px_0_#000] overflow-hidden">
@@ -326,7 +326,7 @@ export default function Dashboard() {
 
       {/* TRY IT */}
       <section className="px-10 py-12 border-t-[3px] border-b-[3px] border-black">
-        <div className="font-mono text-[10px] tracking-[3px] font-bold text-[#888] mb-2.5">REPORT REVIEWED -- MIGRATION COMPLETE</div>
+        <div className="font-mono text-[10px] tracking-[3px] font-bold text-[#888] mb-2.5">REPORT REVIEWED: MIGRATION COMPLETE</div>
         <div className="font-black text-[clamp(22px,3vw,30px)] mb-8" style={{ fontFamily: "'Arial Black', Arial, sans-serif" }}>
           Try the legacy simulation side by side with the live rebuild
         </div>
@@ -354,7 +354,7 @@ export default function Dashboard() {
           {/* Legacy sim column */}
           <div>
             <div className="font-black text-[14px] tracking-wide pb-2 mb-1.5 border-b-[3px] border-[#999] text-[#777]" style={{ fontFamily: "'Arial Black', Arial, sans-serif" }}>[ LEGACY UI SIMULATION ]</div>
-            <div className="font-mono text-[10px] text-[#999] mb-3.5">HARDCODED -- NO NETWORK CALLS -- JS-only replica</div>
+            <div className="font-mono text-[10px] text-[#999] mb-3.5">HARDCODED | NO NETWORK CALLS | React/TypeScript replica</div>
             {['Account Opening', 'Manager Approval', 'Check Status'].map(label => (
               <button
                 key={label}
@@ -362,19 +362,19 @@ export default function Dashboard() {
                 onClick={() => navigate('/legacy')}
               >
                 <div className="font-black text-[14px] text-[#444]" style={{ fontFamily: "'Arial Black', Arial, sans-serif" }}>{label}</div>
-                <div className="font-mono text-[10px] text-[#888] mt-1">SIMULATED -- G1_{label.replace(' ', '').toUpperCase()} -- see Legacy tab</div>
+                <div className="font-mono text-[10px] text-[#888] mt-1">SIMULATED | G1_{label.replace(' ', '').toUpperCase()} | see Legacy tab</div>
               </button>
             ))}
           </div>
 
           {/* Live column */}
           <div>
-            <div className="font-black text-[14px] tracking-wide pb-2 mb-1.5 border-b-[3px] border-[#1A6EFF] text-[#1A6EFF]" style={{ fontFamily: "'Arial Black', Arial, sans-serif" }}>LIVE -- ORDS -- formsproto</div>
-            <div className="font-mono text-[10px] text-[#999] mb-3.5">REAL DB CALLS -- Oracle Autonomous DB 23ai -- pkg_ob_* packages</div>
+            <div className="font-black text-[14px] tracking-wide pb-2 mb-1.5 border-b-[3px] border-[#1A6EFF] text-[#1A6EFF]" style={{ fontFamily: "'Arial Black', Arial, sans-serif" }}>LIVE | ORDS | formsproto</div>
+            <div className="font-mono text-[10px] text-[#999] mb-3.5">REAL DB CALLS | Oracle Autonomous DB 23ai | pkg_ob_* packages</div>
             {[
-              { label: 'Account Opening', sub: 'POST /ob/requests/ -- pkg_ob_accountopening -- INSERT GROUP1_ACCOUNTREQUEST', to: '/live/account-opening' },
-              { label: 'Manager Approval', sub: 'GET /ob/pending/ + POST /ob/approve|reject/:id -- pkg_ob_managerapproval', to: '/live/manager-approval' },
-              { label: 'Check Status', sub: 'GET /ob/status/:id -- pkg_ob_checkstatus -- GROUP1_ACCOUNTREQUEST + GRP1_REGISTEREDINFO', to: '/live/check-status' },
+              { label: 'Account Opening', sub: 'POST /ob/requests/ | pkg_ob_accountopening | INSERT GROUP1_ACCOUNTREQUEST', to: '/live/account-opening' },
+              { label: 'Manager Approval', sub: 'GET /ob/pending/ + POST /ob/approve|reject/:id | pkg_ob_managerapproval', to: '/live/manager-approval' },
+              { label: 'Check Status', sub: 'GET /ob/status/:id | pkg_ob_checkstatus | GROUP1_ACCOUNTREQUEST + GRP1_REGISTEREDINFO', to: '/live/check-status' },
             ].map(link => (
               <button
                 key={link.label}
@@ -391,8 +391,8 @@ export default function Dashboard() {
 
       {/* FOOTER */}
       <footer className="bg-black text-[#555] px-10 py-5 font-mono text-[11px] flex justify-between flex-wrap gap-2">
-        <span>ORACLE FORMS MODERNIZATION PIPELINE -- module: online_banking</span>
-        <span>DB: formsproto Autonomous DB 23ai -- generated 2026-07-07</span>
+        <span>ORACLE FORMS MODERNIZATION PIPELINE | module: online_banking</span>
+        <span>DB: formsproto Autonomous DB 23ai | generated 2026-07-07</span>
       </footer>
     </div>
   )

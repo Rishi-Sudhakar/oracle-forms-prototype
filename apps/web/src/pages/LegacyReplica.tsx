@@ -47,32 +47,64 @@ function FormsLoadingOverlay({ formId, onDone }: { formId: string; onDone: () =>
     return () => clearInterval(interval)
   }, [onDone])
 
+  const statusMsg =
+    progress < 25 ? 'Connecting to Oracle Forms Services...' :
+    progress < 55 ? 'Loading form definition...' :
+    progress < 85 ? `Initializing ${formId}...` :
+    'Opening form...'
+
   return (
-    <div style={{ position: 'fixed', inset: 0, background: '#d4d0c8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 9999, fontFamily: 'Tahoma, Arial, sans-serif' }}>
-      {/* Title bar */}
-      <div style={{ width: 420, border: '2px solid', borderColor: '#dfdfdf #808080 #808080 #dfdfdf', boxShadow: '2px 2px 0 #000' }}>
-        <div style={{ background: 'linear-gradient(to right, #000082, #1084d0)', color: 'white', padding: '3px 6px', fontSize: 11, fontWeight: 700, display: 'flex', justifyContent: 'space-between' }}>
-          <span>Oracle Forms Server</span>
-          <span style={{ cursor: 'default' }}>✕</span>
+    <div style={{
+      position: 'fixed', inset: 0, background: '#eef1f5',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      zIndex: 9999, fontFamily: "'Segoe UI', system-ui, sans-serif",
+    }}>
+      <div style={{
+        background: 'white', borderRadius: 10, boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
+        border: '1px solid #d0d7e1', width: 400, overflow: 'hidden',
+      }}>
+        {/* Title bar */}
+        <div style={{ background: '#1d2c3e', color: 'white', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 20, height: 20, background: '#e8280b', borderRadius: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: 'white' }}>F</div>
+            <span style={{ fontSize: 13, fontWeight: 600 }}>Oracle Forms Services 14c</span>
+          </div>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {['#f0b429','#28c840','#ff605c'].map((c, i) => (
+              <div key={i} style={{ width: 12, height: 12, borderRadius: '50%', background: c }} />
+            ))}
+          </div>
         </div>
-        <div style={{ background: '#d4d0c8', padding: '24px 28px' }}>
-          <div style={{ textAlign: 'center', marginBottom: 18 }}>
-            <div style={{ fontFamily: 'Arial Black, Arial', fontSize: 16, fontWeight: 900, color: '#000080', marginBottom: 4 }}>Oracle Application Framework</div>
-            <div style={{ fontSize: 11, color: '#555' }}>Loading form: <strong>{formId}</strong></div>
+
+        {/* Body */}
+        <div style={{ padding: '28px 32px' }}>
+          {/* Oracle branding */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+            <div style={{ background: '#cc0000', color: 'white', fontWeight: 800, fontSize: 12, padding: '3px 8px', borderRadius: 3, fontFamily: 'Arial Black, Arial, sans-serif' }}>ORACLE</div>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#1d2c3e' }}>Oracle Forms 14c</div>
+              <div style={{ fontSize: 11, color: '#6b7a8d' }}>Browser-Based Runtime</div>
+            </div>
           </div>
-          <div style={{ border: '1px solid', borderColor: '#808080 #dfdfdf #dfdfdf #808080', background: 'white', height: 18, marginBottom: 8, overflow: 'hidden' }}>
-            <div style={{ height: '100%', background: 'linear-gradient(to right, #000082, #1084d0)', width: `${progress}%`, transition: 'width 0.1s linear' }} />
+
+          <div style={{ fontSize: 13, color: '#3d4f63', marginBottom: 16 }}>
+            Loading: <code style={{ fontSize: 12, fontWeight: 700, color: '#1d2c3e', fontFamily: "'Courier New', monospace" }}>{formId}</code>
           </div>
-          <div style={{ fontSize: 10, color: '#888', fontFamily: 'Courier New, monospace', textAlign: 'center' }}>
-            {progress < 30 && 'Connecting to Forms Server...'}
-            {progress >= 30 && progress < 60 && 'Loading form definition...'}
-            {progress >= 60 && progress < 90 && `Initializing ${formId}...`}
-            {progress >= 90 && 'Opening form...'}
+
+          {/* Progress bar */}
+          <div style={{ background: '#e8edf3', borderRadius: 4, height: 6, overflow: 'hidden', marginBottom: 10 }}>
+            <div style={{
+              height: '100%', background: '#0572CE', borderRadius: 4,
+              width: `${progress}%`, transition: 'width 0.1s linear',
+            }} />
           </div>
+
+          <div style={{ fontSize: 12, color: '#6b7a8d' }}>{statusMsg}</div>
         </div>
-      </div>
-      <div style={{ marginTop: 12, fontSize: 10, color: '#777', fontFamily: 'Courier New, monospace' }}>
-        Oracle Forms Runtime -- formsproto [online_banking]
+
+        <div style={{ padding: '0 32px 20px', fontSize: 11, color: '#aaa' }}>
+          formsproto [online_banking]
+        </div>
       </div>
     </div>
   )
@@ -106,7 +138,7 @@ export default function LegacyReplica() {
   function handleTabChange(id: string) {
     setActiveTab(id)
     const blockName = id === 'account' ? 'G1_ACCOUNTOPENING' : id === 'approval' ? 'G1_MANAGERAPPROVAL' : 'G1_CHECKSTATUS1'
-    setStatusText(`Record: 1 | Normal -- ${blockName}`)
+    setStatusText(`Record: 1 | Normal | ${blockName}`)
   }
 
   function submitAccountOpening() {
@@ -127,7 +159,7 @@ export default function LegacyReplica() {
     const id = nextReqId
     setDb(prev => ({ ...prev, [id]: { status: 'ENTERED', firstName: f.fname, lastName: f.lname, acctType: f.acctType } }))
     setNextReqId(id + 10)
-    showMsg(`Application submitted successfully.\nRequest ID: ${id}\nStatus: ENTERED -- awaiting manager approval.\n\n[Calls: pkg_ob_accountopening.submit_account_request]`)
+    showMsg(`Application submitted successfully.\nRequest ID: ${id}\nStatus: ENTERED (awaiting manager approval).\n\n[Calls: pkg_ob_accountopening.submit_account_request]`)
   }
 
   function approveRow(reqId: number) {
@@ -149,15 +181,15 @@ export default function LegacyReplica() {
     const rid = parseInt(checkId)
     const req = db[rid]
     if (!req) {
-      setCheckResult({ html: `<span style="color:#aa0000">No application found for Request ID: ${checkId || '--'}</span>` })
+      setCheckResult({ html: `<span style="color:#aa0000">No application found for Request ID: ${checkId || 'N/A'}</span>` })
       return
     }
     if (req.status === 'APPROVED') {
-      setCheckResult({ html: `<span style="color:#006600;font-weight:700">APPLICATION APPROVED</span><br>Account Number: <strong>${req.acctNum}</strong><br><br>[pkg_ob_checkstatus.check_request_status -- Status=APPROVED]` })
+      setCheckResult({ html: `<span style="color:#006600;font-weight:700">APPLICATION APPROVED</span><br>Account Number: <strong>${req.acctNum}</strong><br><br>[pkg_ob_checkstatus.check_request_status: Status=APPROVED]` })
     } else if (req.status === 'ENTERED') {
-      setCheckResult({ html: `<span style="color:#333">APPLICATION PENDING</span><br>Your application is currently under review by the manager.<br><br>[pkg_ob_checkstatus.check_request_status -- Status=ENTERED]` })
+      setCheckResult({ html: `<span style="color:#333">APPLICATION PENDING</span><br>Your application is currently under review by the manager.<br><br>[pkg_ob_checkstatus.check_request_status: Status=ENTERED]` })
     } else {
-      setCheckResult({ html: `<span style="color:#aa0000;font-weight:700">APPLICATION REJECTED</span><br>Your application has not been approved. Please visit a branch for assistance.<br><br>[pkg_ob_checkstatus.check_request_status -- Status=REJECTED]` })
+      setCheckResult({ html: `<span style="color:#aa0000;font-weight:700">APPLICATION REJECTED</span><br>Your application has not been approved. Please visit a branch for assistance.<br><br>[pkg_ob_checkstatus.check_request_status: Status=REJECTED]` })
     }
   }
 
@@ -170,7 +202,7 @@ export default function LegacyReplica() {
   return (
     <div className="f-body">
       <div className="f-demo-label" style={{ width: '100%', maxWidth: 780 }}>
-        DELIVERABLE 1: Legacy-Faithful Replica -- Oracle Forms UI rebuilt in HTML/CSS -- Calls extracted PL/SQL packages
+        DELIVERABLE 1: Legacy Path | Oracle Forms 14c UI rebuilt in React/TypeScript | Calls extracted PL/SQL packages
       </div>
 
       <FormsWindow
@@ -181,7 +213,7 @@ export default function LegacyReplica() {
         activeTab={activeTab}
         onTabChange={handleTabChange}
         statusText={statusText}
-        statusItems={[`BLOCK: ${activeTab === 'account' ? 'G1_ACCOUNTOPENING' : activeTab === 'approval' ? 'G1_MANAGERAPPROVAL' : 'G1_CHECKSTATUS1'}`, 'ORACLE FORMS 10g']}
+        statusItems={[`BLOCK: ${activeTab === 'account' ? 'G1_ACCOUNTOPENING' : activeTab === 'approval' ? 'G1_MANAGERAPPROVAL' : 'G1_CHECKSTATUS1'}`, 'Oracle Forms 14c']}
       >
 
         {/* ACCOUNT OPENING */}
@@ -189,7 +221,7 @@ export default function LegacyReplica() {
           <div>
             <div className="f-title-block">
               <div className="f-title-text">NEW ACCOUNT OPENING REQUEST</div>
-              <div style={{ marginLeft: 'auto', color: '#888', fontSize: 10 }}>Block: G1_ACCOUNTOPENING -- Table: GROUP1_ACCOUNTREQUEST</div>
+              <div style={{ marginLeft: 'auto', color: '#888', fontSize: 10 }}>Block: G1_ACCOUNTOPENING | Table: GROUP1_ACCOUNTREQUEST</div>
             </div>
 
             <div className="f-section">
@@ -202,14 +234,14 @@ export default function LegacyReplica() {
                 <div className="f-field-group">
                   <span className="f-label">Branch <span className="f-req">*</span></span>
                   <select className="f-select" style={{ width: 110 }} value={acctForm.branch} onChange={e => setAcctForm(p => ({ ...p, branch: e.target.value }))}>
-                    <option value="">-- select --</option>
+                    <option value="">(select)</option>
                     {['NORTH', 'SOUTH', 'EAST', 'WEST'].map(b => <option key={b}>{b}</option>)}
                   </select>
                 </div>
                 <div className="f-field-group">
                   <span className="f-label">Account Type <span className="f-req">*</span></span>
                   <select className="f-select" style={{ width: 110 }} value={acctForm.acctType} onChange={e => setAcctForm(p => ({ ...p, acctType: e.target.value }))}>
-                    <option value="">-- select --</option>
+                    <option value="">(select)</option>
                     {['SAVINGS', 'CURRENT'].map(t => <option key={t}>{t}</option>)}
                   </select>
                 </div>
@@ -222,7 +254,7 @@ export default function LegacyReplica() {
                 <div className="f-field-group">
                   <span className="f-label">Title <span className="f-req">*</span></span>
                   <select className="f-select" style={{ width: 60 }} value={acctForm.title} onChange={e => setAcctForm(p => ({ ...p, title: e.target.value }))}>
-                    <option value="">--</option>
+                    <option value="">(select)</option>
                     {['MR', 'MRS', 'MISS', 'DR'].map(t => <option key={t}>{t}</option>)}
                   </select>
                 </div>
@@ -291,10 +323,10 @@ export default function LegacyReplica() {
         {activeTab === 'approval' && (
           <div>
             <div className="f-title-block">
-              <div className="f-title-text">ACCOUNT APPROVAL -- PENDING REQUESTS</div>
-              <div style={{ marginLeft: 'auto', color: '#888', fontSize: 10 }}>Block: G1_ACCOUNTREQUEST_B2 -- WHERE Status='ENTERED'</div>
+              <div className="f-title-text">ACCOUNT APPROVAL: PENDING REQUESTS</div>
+              <div style={{ marginLeft: 'auto', color: '#888', fontSize: 10 }}>Block: G1_ACCOUNTREQUEST_B2 | WHERE Status='ENTERED'</div>
             </div>
-            <div style={{ fontSize: 10, color: '#666', marginBottom: 6 }}>Showing ENTERED requests -- pkg_ob_managerapproval.approve_request / reject_request</div>
+            <div style={{ fontSize: 10, color: '#666', marginBottom: 6 }}>Showing ENTERED requests | pkg_ob_managerapproval.approve_request / reject_request</div>
 
             <div className="f-grid">
               <table>
@@ -313,7 +345,7 @@ export default function LegacyReplica() {
                         <td>{req.firstName}</td>
                         <td>{req.lastName}</td>
                         <td>{req.acctType}</td>
-                        <td>{req.status}{req.acctNum ? ` -- ${req.acctNum}` : ''}</td>
+                        <td>{req.status}{req.acctNum ? ` | ${req.acctNum}` : ''}</td>
                         <td>
                           <button className="f-btn approve" style={{ fontSize: 10, minWidth: 'auto', padding: '0 6px', height: 17 }}
                             disabled={req.status !== 'ENTERED'} onClick={() => approveRow(id)}>APPROVE</button>
@@ -328,10 +360,10 @@ export default function LegacyReplica() {
               </table>
             </div>
 
-            <div className="f-section" style={{ background: '#fffdf0', borderColor: '#c8c490 #fff8a0 #fff8a0 #c8c490' }}>
-              <div className="f-section-title" style={{ color: '#555', fontSize: 10 }}>ALGORITHM: Account# = AccountType(2) || FirstName(3) || lpad(seq,5,'0')</div>
-              <div style={{ fontFamily: 'Courier New,monospace', fontSize: 10, color: '#333', marginTop: 4 }}>
-                Example: AccountType=SAVINGS, FirstName=Arun -- <strong>SAaru00001</strong>
+            <div className="f-section" style={{ background: '#fafbfc' }}>
+              <div className="f-section-title">ALGORITHM: Account# = AccountType(2) || FirstName(3) || lpad(seq,5,'0')</div>
+              <div style={{ fontFamily: 'Courier New,monospace', fontSize: 11, color: '#3d4f63', marginTop: 4 }}>
+                Example: AccountType=SAVINGS, FirstName=Arun: <strong>SAaru00001</strong>
               </div>
             </div>
 
@@ -346,7 +378,7 @@ export default function LegacyReplica() {
           <div>
             <div className="f-title-block">
               <div className="f-title-text">CHECK APPLICATION STATUS</div>
-              <div style={{ marginLeft: 'auto', color: '#888', fontSize: 10 }}>Block: G1_CHECKSTATUS1 -- pkg_ob_checkstatus.check_request_status</div>
+              <div style={{ marginLeft: 'auto', color: '#888', fontSize: 10 }}>Block: G1_CHECKSTATUS1 | pkg_ob_checkstatus.check_request_status</div>
             </div>
 
             <div className="f-section">
@@ -369,7 +401,7 @@ export default function LegacyReplica() {
             )}
 
             <div style={{ marginTop: 16, fontSize: 10, color: '#888', borderTop: '1px solid #b0b0b0', paddingTop: 8 }}>
-              DEMO DATA: Request IDs 10, 20, 50 = ENTERED -- 30 = APPROVED (SAraj00001) -- 40 = REJECTED
+              DEMO DATA: Request IDs 10/20/50 = ENTERED | 30 = APPROVED (SAraj00001) | 40 = REJECTED
             </div>
 
             <div className="f-btn-row">

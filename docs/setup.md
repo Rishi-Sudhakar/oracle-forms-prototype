@@ -4,10 +4,12 @@ This guide covers everything needed to run both prototype paths (modernize and m
 against a live Oracle database with Claude Code as the AI agent.
 
 **Target DB direction:** The prototype runs on Autonomous Database 23ai (Always Free tier).
-The client's stated direction is Oracle AI Database 26ai (the AI-native LTS release,
-internally versioned 23.26.x). The MCP-based architecture used here is the same pattern
-26ai is built around -- upgrading from 23ai to 26ai is a release update, not a
-re-architecture. EBS 12.2 is certified on 26ai.
+The client's full engagement has three steps: (1) migrate EBS from on-premises to OCI,
+(2) upgrade the underlying database to Oracle AI Database 26ai (EBS 12.2 is certified on
+26ai; 23ai to 26ai is a release update, not a re-architecture), then (3) the
+Forms-modernization work this prototype demonstrates. Everything in this repo is Step 3.
+The MCP-based architecture here is the same pattern 26ai is built around, so it carries
+forward without change after the upgrade.
 
 ---
 

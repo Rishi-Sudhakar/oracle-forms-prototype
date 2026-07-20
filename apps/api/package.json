@@ -1,0 +1,13 @@
+{
+  "name": "@oracle-forms/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch index.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.55.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
