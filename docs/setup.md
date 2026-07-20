@@ -182,23 +182,75 @@ You'll build the modernized APEX app in `apps/modernize/apex/` and import it her
 
 ---
 
-## 7. Project Layout Reference
+## 7. AI Pipeline Server Setup
+
+The pipeline server (`apps/pipeline/`) is a Python FastAPI backend that runs the
+LangGraph + LlamaIndex + Autogen analysis stack. It must be running for the
+AI PIPELINE page in the web app to work.
+
+### Install Python dependencies
+
+```bash
+cd apps/pipeline
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+> Requires Python 3.11+. The `lxml` package needs system libxml2 — on macOS it installs
+> via pip with no extra steps. On Linux: `apt-get install libxml2-dev libxslt1-dev`.
+
+### Set API key
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Or create `apps/pipeline/.env` with `ANTHROPIC_API_KEY=sk-ant-...`.
+
+### Start the server
+
+```bash
+# from apps/pipeline/ with .venv active
+uvicorn main:app --port 3001 --reload
+```
+
+Or from the repo root (starts both frontend and pipeline together):
+
+```bash
+npm run dev:all
+```
+
+### Verify
+
+```bash
+curl http://localhost:3001/api/health
+# {"status":"ok","stack":["LangGraph","LlamaIndex","Autogen","Claude Opus 4.8"]}
+```
+
+---
+
+## 8. Project Layout Reference
 
 ```
 oracle-forms-prototype/
 ├── apps/
-│   ├── modernize/          # Path 1: Forms → APEX
-│   │   ├── input/          # .fmb export / XML source
-│   │   ├── analysis/       # AI-generated object inventory & logic extraction
-│   │   ├── plsql/          # Generated PL/SQL packages
-│   │   ├── apex/           # APEX app export (f*.sql) or build scripts
-│   │   └── report/         # AI-generated modernization report
-│   └── maintain/           # Path 2: AI-assisted maintenance
-│       ├── input/          # Same source files (Forms XML / PL/SQL)
-│       ├── docs/           # AI-generated module documentation
-│       ├── tests/          # Unit/regression test scaffolding
-│       ├── explanations/   # Plain-language trigger explanations
-│       └── tickets/        # Ticket → suggested fix diffs
+│   ├── pipeline/           # AI pipeline server (LangGraph + LlamaIndex + Autogen)
+│   │   ├── main.py         # FastAPI app — /api/analyze, /api/modernize, /api/health
+│   │   ├── graph.py        # LangGraph StateGraph (5 nodes, 4 parallel agents)
+│   │   ├── requirements.txt
+│   │   └── services/
+│   │       ├── forms_parser.py    # Oracle Forms XML parser
+│   │       ├── forms_analysis.py  # Static analysis, automation score
+│   │       ├── logic_index.py     # LlamaIndex PL/SQL indexing
+│   │       └── autogen_review.py  # Autogen multi-agent review
+│   ├── web/                # React + TypeScript frontend (Vite, port 5173)
+│   │   └── src/pages/
+│   │       ├── EBSConsole.tsx      # EBS landing page replica
+│   │       ├── AgentPipeline.tsx   # 5-step pipeline UI
+│   │       └── ...
+│   ├── modernize/          # Path 1: Forms → APEX artifacts
+│   └── maintain/           # Path 2: AI-assisted maintenance artifacts
 ├── shared/
 │   ├── db/                 # Wallet config notes, seed SQL, tnsnames snippet
 │   └── scripts/            # Shared utility scripts (SQLcl runners, etc.)
@@ -212,6 +264,16 @@ oracle-forms-prototype/
 
 ## Quick-start checklist
 
+**Pipeline (works without Oracle Cloud):**
+- [ ] Node.js 18+ and Python 3.11+ installed
+- [ ] `npm install` run from repo root
+- [ ] `apps/pipeline/.venv` created and `requirements.txt` installed
+- [ ] `ANTHROPIC_API_KEY` set in environment or `apps/pipeline/.env`
+- [ ] `npm run dev:all` starts both servers without errors
+- [ ] `http://localhost:5173` loads the EBS Console
+- [ ] AI PIPELINE button opens the pipeline UI and health check passes
+
+**Full demo with live Oracle DB:**
 - [ ] Oracle Cloud account created (Always Free)
 - [ ] Autonomous Database provisioned, wallet downloaded
 - [ ] SQLcl installed and connected to DB
